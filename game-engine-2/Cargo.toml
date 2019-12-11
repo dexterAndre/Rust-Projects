@@ -1,0 +1,10 @@
+[package]
+name = "game-engine-2"
+version = "0.1.0"
+authors = ["Dexter André Osiander <dexter.andre@outlook.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+glutin = "0.21.2"

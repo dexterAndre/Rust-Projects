@@ -7,7 +7,6 @@
 //      Rust + GLFW + OpenGL small sample program: https://www.reddit.com/r/rust_gamedev/comments/e03qwz/help_how_to_multithreading_glfw_cursorpos_callback/
 
 
-// pub use crate::lib::Time::{self, TimerScoped};
 mod system_time;
 use crate::system_time::time;
 mod rendering;
@@ -42,7 +41,9 @@ fn main() {
 
 
 fn main() {
-    test_math();
+    test_vector2();
+    // test_math_profiling();
+    // test_rendering();
 }
 
 fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
@@ -217,11 +218,51 @@ fn test_rendering() {
     }
 }
 
-fn test_math() {
+fn test_math_profiling() {
     pub use mathematics::linalg::vector::Vector2;
 
-    let a = Vector2::from_floats(3.0, 4.0);
-    let b = Vector2::from_floats(1.0, 5.0);
+    let a = Vector2::new(3.0, 4.0);
+    let b = Vector2::new(1.0, 5.0);
 
     println!("a: {:?}, b: {:?}", a, b);
+
+    let iterations = 100_000_000;
+    
+    println!("Vector angle unit: ");
+    {
+        let t = time::TimerScoped::new();
+        for i in 0..iterations {
+            let test_angle_unit = Vector2::angle_unit(&a, &b);
+        }
+    }
+    
+    println!("Vector angle: ");
+    {
+        let t = time::TimerScoped::new();
+        for i in 0..iterations {
+            let test_angle = Vector2::angle(&a, &b);
+        }
+    }
+
+    println!("Vector angle safe: ");
+    {
+        let t = time::TimerScoped::new();
+        for i in 0..iterations {
+            let test_angle_safe = Vector2::angle_safe(&a, &b);
+        }
+    }
+}
+
+fn test_vector2() {
+    use mathematics::linalg::vector::Vector2;
+
+    let a = Vector2::new(3.0, 4.0);
+    let b = Vector2::new(5.0, 1.0);
+    let c = Vector2::from_vector2(&a);
+    let d = Vector2::projection(&a, &b);
+
+    println!("a: {}", a.to_string());
+    println!("b: {}", b.to_string());
+    println!("c: {}", c.to_string());
+    println!("d: {}", d.to_string());
 }

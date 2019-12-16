@@ -635,43 +635,46 @@ pub mod num {
 
 pub mod linalg {
     pub mod vector {
-        use super::super::num::constants;
+        use super::super::num::constants as num;
         use std::ops::{ Add, AddAssign, Sub, SubAssign, Neg, Mul, MulAssign, Div, DivAssign, BitXor };
-        use std::num;
 
         
-        #[derive(Debug)]
+        #[derive(Debug, Copy, Clone)]
         pub struct Vector2 { x: f32, y: f32 }
 
         // Construction
         impl Vector2 {
-            pub fn new(a: f32, b: f32)                      -> Self { return Self { x: a, y: b }; }
-            pub fn from_polar(radian: f32, radius: f32)     -> Self { return Self { x: f32::cos(radian) * radius, y: f32::sin(radian) * radius }; }
+            pub fn new(a: f32, b: f32)                      -> Self { return Self { x: a, y: b}; }
+            pub fn from_polar(radian: f32, radius: f32)     -> Self { return Vector2::new(f32::cos(radian) * radius, f32::sin(radian) * radius); }
             pub fn from_vector2(v: &Vector2)                -> Self { return Vector2::new(v.x, v.y); }
             pub fn from_vector3(v: &Vector3)                -> Self { return Vector2::new(v.x, v.y); }
             pub fn from_vector4(v: &Vector4)                -> Self { return Vector2::new(v.x, v.y); }
         }
+        
         // Prefabrication
         impl Vector2 {
-            pub fn one()    -> Self { return Self { x: 1.0, y: 1.0 }; }
-            pub fn zero()   -> Self { return Self { x: 0.0, y: 0.0 }; }
-            pub fn right()  -> Self { return Self { x: 1.0, y: 0.0 }; }
-            pub fn left()   -> Self { return Self { x: -1.0, y: 0.0 }; }
-            pub fn up()     -> Self { return Self { x: 0.0, y: 1.0 }; }
-            pub fn down()   -> Self { return Self { x: 0.0, y: -1.0 }; }
-            pub fn QI()     -> Self { return Self { x: 1.0, y: 1.0 }; }
-            pub fn QIn()    -> Self { return Self { x: constants::SQRT2OVER2, y: constants::SQRT2OVER2 }; }
-            pub fn QII()    -> Self { return Self { x: -constants::SQRT2OVER2, y: constants::SQRT2OVER2 }; }
-            pub fn QIII()   -> Self { return Self { x: -constants::SQRT2OVER2, y: -constants::SQRT2OVER2 }; }
-            pub fn QIV()    -> Self { return Self { x: constants::SQRT2OVER2, y: -constants::SQRT2OVER2 }; }
+            pub fn one()    -> Self { return Vector2::new(1.0, 1.0); }
+            pub fn zero()   -> Self { return Vector2::new(0.0, 0.0); }
+            pub fn right()  -> Self { return Vector2::new(1.0, 0.0); }
+            pub fn left()   -> Self { return Vector2::new(-1.0, 0.0); }
+            pub fn up()     -> Self { return Vector2::new(0.0, 1.0); }
+            pub fn down()   -> Self { return Vector2::new(0.0, -1.0); }
+            pub fn QI()     -> Self { return Vector2::new(1.0, 1.0); }
+            pub fn QIn()    -> Self { return Vector2::new(num::SQRT2OVER2, num::SQRT2OVER2); }
+            pub fn QII()    -> Self { return Vector2::new(-1.0, 1.0); }
+            pub fn QIIn()   -> Self { return Vector2::new(-num::SQRT2OVER2, num::SQRT2OVER2); }
+            pub fn QIII()   -> Self { return Vector2::new(-1.0, -1.0); }
+            pub fn QIIIn()  -> Self { return Vector2::new(-num::SQRT2OVER2, -num::SQRT2OVER2); }
+            pub fn QIV()    -> Self { return Vector2::new(1.0, -1.0); }
+            pub fn QIVn()   -> Self { return Vector2::new(num::SQRT2OVER2, -num::SQRT2OVER2); }
         }
         
         // Swizzling
         impl Vector2 {
-            pub fn xx(&self)    -> Self { return Self { x: self.x, y: self.x }; }
-            pub fn xy(&self)    -> Self { return Self { x: self.x, y: self.y }; }
-            pub fn yx(&self)    -> Self { return Self { x: self.y, y: self.x }; }
-            pub fn yy(&self)    -> Self { return Self { x: self.y, y: self.y }; }
+            pub fn xx(&self)    -> Self { return Vector2::new(self.x, self.x); }
+            pub fn xy(&self)    -> Self { return Vector2::new(self.x, self.y); }
+            pub fn yx(&self)    -> Self { return Vector2::new(self.y, self.x); }
+            pub fn yy(&self)    -> Self { return Vector2::new(self.y, self.y); }
         }
         
         // Utilities
@@ -682,34 +685,38 @@ pub mod linalg {
 
         // Vector arithmetic
         //      Addition: { v + v, v += v }
-        impl Add<&Vector2> for &Vector2 { type Output = Vector2; fn add(self, v: &Vector2) -> Vector2 { 
+        impl Add<Vector2> for Vector2 { type Output = Vector2; fn add(self, v: Vector2) -> Vector2 {
             return Vector2::new(self.x + v.x, self.y + v.y); } }
-        impl AddAssign<&Vector2> for Vector2 { fn add_assign(&mut self, v: &Vector2) { 
+        // Keep the example below - it might come of use regarding ownership (copy trait, etc.). 
+        // This example should apply to most basic arithmetic operations (except assigns, unary operations, etc.). 
+        // impl Add<&Vector2> for &Vector2 { type Output = Vector2; fn add(self, v: &Vector2) -> Vector2 { 
+        //     return Vector2::new(self.x + v.x, self.y + v.y); } }
+        impl AddAssign<Vector2> for Vector2 { fn add_assign(&mut self, v: Vector2) { 
             self.x += v.x; self.y += v.y; } }
         //      Subtraction: { v - v, v -= v, -v }
-        impl Sub<&Vector2> for &Vector2 { type Output = Vector2; fn sub(self, v: &Vector2) -> Vector2 { 
+        impl Sub<Vector2> for Vector2 { type Output = Vector2; fn sub(self, v: Vector2) -> Vector2 { 
             return Vector2::new(self.x - v.x, self.y - v.y); } }
-        impl SubAssign<&Vector2> for Vector2 { fn sub_assign(&mut self, v: &Vector2) { 
+        impl SubAssign<Vector2> for Vector2 { fn sub_assign(&mut self, v: Vector2) { 
             self.x -= v.x; self.y -= v.y; } }
-        impl Neg for &Vector2 { type Output = Vector2; fn neg(self) -> Vector2 { 
+        impl Neg for Vector2 { type Output = Vector2; fn neg(self) -> Vector2 { 
             return Vector2::new(-self.x, -self.y); } }
         //      Scalar-vector multiplication: { v * s, v *= s, s * v }
-        impl Mul<f32> for &Vector2 { type Output = Vector2; fn mul(self, s: f32) -> Vector2 { 
+        impl Mul<f32> for Vector2 { type Output = Vector2; fn mul(self, s: f32) -> Vector2 { 
             return Vector2::new(self.x * s, self.y * s); } }
         impl MulAssign<f32> for Vector2 { fn mul_assign(&mut self, s: f32) { 
             self.x *= s; self.y *= s; } }
-        impl Mul<&Vector2> for f32 { type Output = Vector2; fn mul(self, v: &Vector2) -> Vector2 { 
+        impl Mul<Vector2> for f32 { type Output = Vector2; fn mul(self, v: Vector2) -> Vector2 {
             return Vector2::new(v.x * self, v.y * self); } }
         //      Vector-vector multiplication: { scalar (dot "*"), vector (cross "/"; z-value only), geometric (wedge "^"), triple products }
-        impl Mul<&Vector2> for &Vector2 { type Output = f32; fn mul(self, v: &Vector2) -> f32 {
+        impl Mul<Vector2> for Vector2 { type Output = f32; fn mul(self, v: Vector2) -> f32 {
             return self.x * v.x + self.y * v.y; }}
-        impl Vector2 { fn product_scalar(a: &Vector2, b: &Vector2) -> f32 { 
+        impl Vector2 { fn product_scalar(a: Vector2, b: Vector2) -> f32 { 
             return a.x * b.x + a.y * b.y; } }
-        impl Div<&Vector2> for &Vector2 { type Output = f32; fn div(self, v: &Vector2) -> f32 {
+        impl Div<Vector2> for Vector2 { type Output = f32; fn div(self, v: Vector2) -> f32 {
             return self.x * v.y - self.y * v.x; }}
         impl Vector2 { fn product_vector(a: &Vector2, b: &Vector2) -> f32 { 
             return a.x * b.y - a.y * b.x; } }
-        impl BitXor<&Vector2> for &Vector2 { type Output = Vector2 /*Bivector2*/; fn bitxor(self, v: &Vector2) -> Vector2 /*Bivector2*/ {
+        impl BitXor<Vector2> for Vector2 { type Output = Vector2 /*Bivector2*/; fn bitxor(self, v: Vector2) -> Vector2 /*Bivector2*/ {
             return Vector2::new(0.0, 0.0); /* This is just filler */ }}
         impl Vector2 {
             // fn product_geometric(a: &Vector2, b: &Vector2) -> Bivector2 {
@@ -725,7 +732,7 @@ pub mod linalg {
         }
 
         //      Division
-        impl Div<f32> for &Vector2 { type Output = Vector2; fn div(self, s: f32) -> Vector2 { 
+        impl Div<f32> for Vector2 { type Output = Vector2; fn div(self, s: f32) -> Vector2 { 
             let t = 1.0 / s; return Vector2::new(self.x * t, self.y * t); } }
         impl DivAssign<f32> for Vector2 { fn div_assign(&mut self, s: f32) { 
             let t = 1.0 / s; self.x *= t; self.y *= t; } }
@@ -740,7 +747,7 @@ pub mod linalg {
             //      Magnitude
             pub fn mag(&self)               -> f32 { return f32::sqrt(self.x * self.x + self.y * self.y); }
             pub fn mag_sqr(&self)           -> f32 { return self.x * self.x + self.y * self.y; }
-            pub fn normalization(&self)     -> Vector2 { let denom = 1.0 / self.mag(); return Self { x: self.x * denom, y: self.y * denom }; }
+            pub fn normalization(&self)     -> Vector2 { let denom = 1.0 / self.mag(); return Vector2::new(self.x * denom, self.y * denom); }
             pub fn normalize(&mut self)     { let denom = 1.0 / self.mag(); self.x *= denom; self.y *= denom; }
 
             //      Interpolation
@@ -748,37 +755,111 @@ pub mod linalg {
             // fn slerp(a: &Vector2, b: &Vector2, s: f32)   -> Vector2 { /* unfinished */ }
 
             //      Measurement (angles in radians)
-            pub fn angle(a: &Vector2, b: &Vector2)          -> f32 { return f32::acos((a * b) / (a.mag() * b.mag())); }
+            pub fn angle(a: &Vector2, b: &Vector2)          -> f32 { return f32::acos(((*a) * (*b)) / (a.mag() * b.mag())); }
             pub fn angle_safe(a: &Vector2, b: &Vector2)     -> f32 { 
                 let denom = a.mag() * b.mag();
                 if denom <= std::f32::EPSILON {
                     return std::f32::NAN;
                 } else {
-                    return f32::acos((a * b) / denom);
+                    return f32::acos(((*a) * (*b)) / denom);
                 }
             }
-            pub fn angle_unit(a: &Vector2, b: &Vector2)     -> f32 { return f32::acos(a * b); }
+            pub fn angle_unit(a: &Vector2, b: &Vector2)     -> f32 { return f32::acos((*a) * (*b)); }
             // Taken from https://stackoverflow.com/questions/14066933/direct-way-of-computing-clockwise-angle-between-2-vectors
             pub fn angle_signed(a: &Vector2, b: &Vector2)   -> f32 {
-                let dot = (a * b);
-                let det = (a / b);
+                let dot = ((*a) * (*b));
+                let det = ((*a) / (*b));
                 let mut angle = f32::atan2(det, dot);
                 if angle < 0.0 {
-                    angle += constants::TAU;
+                    angle += num::TAU;
                 }
                 return angle;
             }
             //  Is there no angle_signed_unit()?
-            // fn angle_signed_unit(a: Vector2, b: Vector2) -> f32 {
+            // fn angle_signed_unit(a: &Vector2, b: &Vector2) -> f32 {
             // }
 
             //      Vector projection
             pub fn projection(a: &Vector2, b: &Vector2) -> Vector2 {
-                return b * ((a * b) / (b * b));
+                return (*b) * (((*a) * (*b)) / ((*b) * (*b)));
             }
-            // fn projection_scalar_unit(a: Vector2, b: Vector2) -> Vector2 {
+            pub fn projection_unit(a: &Vector2, b: &Vector2) -> Vector2 {
+                return (*b) * ((*a) * (*b));
+            }
+            
+            pub fn rejection(a: &Vector2, b: &Vector2) -> Vector2 {
+                return (*a) - Vector2::projection(a, b);
+            }
+            pub fn rejection_unit(a: &Vector2, b: &Vector2) -> Vector2 {
+                return (*a) - Vector2::projection_unit(a, b);
+            }
 
-            // }
+            pub fn reflection(a: &Vector2, b: &Vector2) -> Vector2 {
+                return (*a) - 2.0 * Vector2::projection(a, b);
+            }
+            pub fn reflection_unit(a:&Vector2, b: &Vector2) -> Vector2 {
+                return (*a) - 2.0 * Vector2::projection_unit(a, b);
+            }
+
+            pub fn refraction(a: &Vector2, b: &Vector2, n1: f32, n2: f32) -> Vector2 {
+                let mag = a.mag();
+                let n = n1 / n2;
+                let t1 = Vector2::angle(&(-(*a)), b);
+                let mut signum = f32::cos(Vector2::angle(a, &Vector2::right()));
+                if signum > 0.0 {
+                    signum = 1.0;
+                } else {
+                    signum = (-1.0);
+                }
+                let t2 = f32::asin(n * f32::sin(t1)) * signum;
+                let t3 = Vector2::angle(b, &Vector2::right());
+                let arg = t3 + num::PI + t2;
+
+                return Vector2::from_polar(arg, mag);
+            }
+            pub fn refraction_unit(a: &Vector2, b: &Vector2, n1: f32, n2: f32) -> Vector2 {
+                let n = n1 / n2;
+                let t1 = Vector2::angle_unit(&(-(*a)), b);
+                let mut signum = f32::cos(Vector2::angle_unit(a, &Vector2::right()));
+                if signum > 0.0 {
+                    signum = 1.0;
+                } else {
+                    signum = (-1.0);
+                }
+                let t2 = f32::asin(n * f32::sin(t1)) * signum;
+                let t3 = Vector2::angle(b, &Vector2::right());
+                let arg = t3 + num::PI + t2;
+
+                return Vector2::from_polar(arg, 1.0);
+            }
+
+            // Queries
+            /*
+                ==
+                <
+                <=
+                >
+                >=
+                isNormalized
+                isParallel
+                isParallelUnit
+                isAntiParallel
+                isAntiParallelUnit
+                isCollinear
+                isCollinearUnit
+                isOrthogonal
+                isOrthogonalUnit
+                TestMode {
+                    // Test difference in magnitudes in world-space units
+                    AbsoluteMagnitude,
+                    // Test difference in magnitude in percentage
+                    RelativeMagnitude,
+                    // Test difference in coordinates in world-space units
+                    AbsoluteCoordinates,
+                    // Test difference in coordinates in percentage
+                    RelativeCoordinates
+                }
+            */
         }
 
 

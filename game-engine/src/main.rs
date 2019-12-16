@@ -255,14 +255,128 @@ fn test_math_profiling() {
 
 fn test_vector2() {
     use mathematics::linalg::vector::Vector2;
+    use mathematics::num::constants as num;
 
-    let a = Vector2::new(3.0, 4.0);
-    let b = Vector2::new(5.0, 1.0);
-    let c = Vector2::from_vector2(&a);
-    let d = Vector2::projection(&a, &b);
-
-    println!("a: {}", a.to_string());
-    println!("b: {}", b.to_string());
-    println!("c: {}", c.to_string());
-    println!("d: {}", d.to_string());
+    // Construction
+    println!("===== CONSTRUCTION =====");
+    let mut a = Vector2::new(3.0, 4.0);
+    println!("a = Vector2::new(3.0, 4.0) -> {}", a.to_string());
+    let mut b = Vector2::new(5.0, 1.0);
+    println!("b = Vector2::new(5.0, 1.0) -> {}", b.to_string());
+    let mut c = Vector2::from_vector2(&a);
+    println!("c = Vector2::from_vector(&a) -> {}", c.to_string());
+    let mut d = Vector2::from_polar(num::PIOVER3, 1.0);
+    println!("d = Vector2::from_polar(num::PIOVER3, 1.0) -> {}", d.to_string());
+    
+    // Prefabrication
+    println!("===== PREFABRICATION =====");
+    let e = Vector2::one();
+    println!("e = Vector2::one() -> {}, mag: {}", e.to_string(), e.mag());
+    let f = Vector2::zero();
+    println!("f = Vector2::zero() -> {}, mag: {}", f.to_string(), f.mag());
+    let g = Vector2::right();
+    println!("g = Vector2::right() -> {}, mag: {}", g.to_string(), g.mag());
+    let h = Vector2::left();
+    println!("h = Vector2::left() -> {}, mag: {}", h.to_string(), h.mag());
+    let i = Vector2::up();
+    println!("i = Vector2::up() -> {}, mag: {}", i.to_string(), i.mag());
+    let j = Vector2::down();
+    println!("j = Vector2::down() -> {}, mag: {}", j.to_string(), j.mag());
+    let k = Vector2::QI();
+    println!("k = Vector2::QI() -> {}, mag: {}", k.to_string(), k.mag());
+    let l = Vector2::QIn();
+    println!("l = Vector2::QIn() -> {}, mag: {}", l.to_string(), l.mag());
+    let m = Vector2::QII();
+    println!("m = Vector2::QII() -> {}, mag: {}", m.to_string(), m.mag());
+    let n = Vector2::QIIn();
+    println!("n = Vector2::QIIn() -> {}, mag: {}", n.to_string(), n.mag());
+    let o = Vector2::QIII();
+    println!("o = Vector2::QIII() -> {}, mag: {}", o.to_string(), o.mag());
+    let p = Vector2::QIIIn();
+    println!("p = Vector2::QIIIn() -> {}, mag: {}", p.to_string(), p.mag());
+    let q = Vector2::QIV();
+    println!("q = Vector2::QIV() -> {}, mag: {}", q.to_string(), q.mag());
+    let r = Vector2::QIVn();
+    println!("r = Vector2::QIVn() -> {}, mag: {}", r.to_string(), r.mag());
+    
+    // Swizzling
+    println!("===== SWIZZLING =====");
+    println!("a = {}", a.to_string());
+    let s = a.xx();
+    println!("s = a.xx() -> {}", s.to_string());
+    let t = a.xy();
+    println!("t = a.xy() -> {}", t.to_string());
+    let u = a.yx();
+    println!("u = a.yx() -> {}", u.to_string());
+    let v = a.yy();
+    println!("v = a.yy() -> {}", v.to_string());
+    
+    // Vector arithmetic
+    println!("===== VECTOR ARITHMETIC =====");
+    println!("a = {}", a.to_string());
+    println!("b = {}", b.to_string());
+    println!("c = {}", c.to_string());
+    println!("d = {}", d.to_string());
+    
+    println!("=== VECTOR ADDITION ===");
+    println!("a + b = {}", (a + b).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    println!("b = {}", (b).to_string());
+    a += b;
+    println!("a += b {}", (a).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    println!("b = {}", (b).to_string());
+    a = Vector2::new(3.0, 4.0);
+    println!("Resetting: a = {}", a.to_string());
+    
+    println!("=== VECTOR SUBTRACTION ===");
+    println!("a - b = {}", (a - b).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    println!("b = {}", (b).to_string());
+    a -= b;
+    println!("a -= b {}", (a).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    println!("b = {}", (b).to_string());
+    a = Vector2::new(3.0, 4.0);
+    println!("Resetting: a = {}", a.to_string());
+    println!("-a = {}", (-a).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    
+    println!("=== SCALAR-VECTOR MULTIPLICATION ===");
+    println!("a * 2.0 = {}", (a * 2.0).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    a *= 2.0;
+    println!("a *= 2.0 = {}", a.to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    a = Vector2::new(3.0, 4.0);
+    println!("Resetting: a = {}", a.to_string());
+    println!("2.0 * a = {}", (2.0 * a).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    
+    println!("=== VECTOR-VECTOR MULTIPLICATION ===");
+    println!("a = {}", a.to_string());
+    println!("b = {}", b.to_string());
+    println!("a * b (scalar; dot) = {}", (a * b));
+    println!("a / b (vector; cross) = {}", (a / b));
+    // println!("a ^ b (geometric; wedge) = {}", (a ^ b));
+    
+    println!("=== SCALAR-VECTOR DIVISION ===");
+    println!("a / 2.0 = {}", (a / 2.0).to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    a /= 2.0;
+    println!("a /= 2.0 = {}", a.to_string());
+    println!("(Ensuring ownership is correct...");
+    println!("a = {}", (a).to_string());
+    a = Vector2::new(3.0, 4.0);
+    println!("Resetting: a = {}", a.to_string());
+    
 }

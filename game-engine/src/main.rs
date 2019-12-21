@@ -270,7 +270,8 @@ fn test_vector2() {
     
     // Prefabrication
     println!("===== PREFABRICATION =====");
-    let e = Vector2::one();
+    //      Mutable for later usage
+    let mut e = Vector2::one();
     println!("e = Vector2::one() -> {}, mag: {}", e.to_string(), e.mag());
     let f = Vector2::zero();
     println!("f = Vector2::zero() -> {}, mag: {}", f.to_string(), f.mag());
@@ -379,4 +380,99 @@ fn test_vector2() {
     a = Vector2::new(3.0, 4.0);
     println!("Resetting: a = {}", a.to_string());
     
+    println!("=== MAGNITUDE ===");
+    println!("a = {}", (a).to_string());
+    println!("a.mag(): {}", a.mag());
+    println!("a.mag_sqr(): {}", a.mag_sqr());
+    println!("a.normalization(): {}", a.normalization().to_string());
+    println!("a = {}", (a).to_string());
+    a.normalize();
+    println!("a.normalize(): {}", a.to_string());
+    a = Vector2::new(3.0, 4.0);
+    println!("Resetting: a = {}", a.to_string());
+    
+    println!("=== LERP ===");
+    println!("a = {}, b = {}", a.to_string(), b.to_string());
+    println!("Vector2::lerp(a, b, 0.25): {}", Vector2::lerp(&a, &b, 0.25).to_string());
+    // println!("Vector2::slerp(a, b, 0.25): {}", Vector2::slerp(&a, &b, 0.25).to_string());
+    
+    println!("=== ANGLE ===");
+    a = Vector2::new(3.0, 4.0);
+    b = Vector2::new(5.0, 1.0);
+    c = Vector2::new(-4.0, 3.0);
+    d = Vector2::new(-3.0, -4.0);
+    e = Vector2::new(-1.0, -3.0);
+
+    println!("Resetting: a = {}, b = {}, c = {}, d = {}, e = {}", a.to_string(), b.to_string(), c.to_string(), d.to_string(), e.to_string());
+    println!("Vector2::angle(x, a): {}r, {}d, {}ds, Vector2::angle(a, x) = {}r, {}d, {}ds", 
+        Vector2::angle(&Vector2::right(), &a), 
+        Vector2::angle(&Vector2::right(), &a) * num::RAD2DEG, 
+        Vector2::angle_signed(&Vector2::right(), &a) * num::RAD2DEG, 
+        Vector2::angle(&a, &Vector2::right()), 
+        Vector2::angle(&a, &Vector2::right()) * num::RAD2DEG,
+        Vector2::angle_signed(&a, &Vector2::right()) * num::RAD2DEG);
+    println!("Vector2::angle(a, b): {}r, {}d, {}ds, Vector2::angle(b, a) = {}r, {}d, {}ds", 
+        Vector2::angle(&a, &b), 
+        Vector2::angle(&a, &b) * num::RAD2DEG, 
+        Vector2::angle_signed(&a, &b) * num::RAD2DEG, 
+        Vector2::angle(&b, &a), 
+        Vector2::angle(&b, &a) * num::RAD2DEG,
+        Vector2::angle_signed(&b, &a) * num::RAD2DEG);
+    println!("Vector2::angle(a, c): {}r, {}d, {}ds, Vector2::angle(c, a) = {}r, {}d, {}ds", 
+        Vector2::angle(&a, &c), 
+        Vector2::angle(&a, &c) * num::RAD2DEG, 
+        Vector2::angle_signed(&a, &c) * num::RAD2DEG, 
+        Vector2::angle(&c, &a), 
+        Vector2::angle(&c, &a) * num::RAD2DEG, 
+        Vector2::angle_signed(&c, &a) * num::RAD2DEG);
+    println!("Vector2::angle(a, d): {}r, {}d, {}ds, Vector2::angle(d, a) = {}r, {}d, {}ds", 
+        Vector2::angle(&a, &d), 
+        Vector2::angle(&a, &d) * num::RAD2DEG, 
+        Vector2::angle_signed(&a, &d) * num::RAD2DEG, 
+        Vector2::angle(&d, &a), 
+        Vector2::angle(&d, &a) * num::RAD2DEG,
+        Vector2::angle_signed(&d, &a) * num::RAD2DEG);
+    println!("Vector2::angle(a, e): {}r, {}d, {}ds, Vector2::angle(e, a) = {}r, {}d, {}ds", 
+        Vector2::angle(&a, &e), 
+        Vector2::angle(&a, &e) * num::RAD2DEG, 
+        Vector2::angle_signed(&a, &e) * num::RAD2DEG, 
+        Vector2::angle(&e, &a), 
+        Vector2::angle(&e, &a) * num::RAD2DEG,
+        Vector2::angle_signed(&e, &a) * num::RAD2DEG);
+    
+    println!("Vector2::angle_unit(x, a.normalization()): {}r, {}d, {}ds, Vector2::angle(a.normalization(), x) = {}r, {}d, {}ds", 
+        Vector2::angle(&Vector2::right(), &a.normalization()), 
+        Vector2::angle(&Vector2::right(), &a.normalization()) * num::RAD2DEG, 
+        Vector2::angle_signed(&Vector2::right(), &a.normalization()) * num::RAD2DEG,
+        Vector2::angle(&a.normalization(), &Vector2::right()), 
+        Vector2::angle(&a.normalization(), &Vector2::right()) * num::RAD2DEG,
+        Vector2::angle_signed(&a.normalization(), &Vector2::right()) * num::RAD2DEG);
+    println!("Vector2::angle_unit(a.normalization(), b.normalization()): {}r, {}d, {}ds, Vector2::angle_unit(b.normalization(), a.normalization()) = {}r, {}d, {}ds", 
+        Vector2::angle_unit(&a.normalization(), &b.normalization()), 
+        Vector2::angle_unit(&a.normalization(), &b.normalization()) * num::RAD2DEG, 
+        Vector2::angle_signed(&a.normalization(), &b.normalization()) * num::RAD2DEG, 
+        Vector2::angle_unit(&b.normalization(), &a.normalization()), 
+        Vector2::angle_unit(&b.normalization(), &a.normalization()) * num::RAD2DEG,
+        Vector2::angle_signed(&b.normalization(), &a.normalization()) * num::RAD2DEG);
+    println!("Vector2::angle_unit(a.normalization(), c.normalization()): {}r, {}d, {}ds, Vector2::angle_unit(c.normalization(), a.normalization()) = {}r, {}d, {}ds", 
+        Vector2::angle_unit(&a.normalization(), &c.normalization()), 
+        Vector2::angle_unit(&a.normalization(), &c.normalization()) * num::RAD2DEG, 
+        Vector2::angle_signed(&a.normalization(), &c.normalization()) * num::RAD2DEG, 
+        Vector2::angle_unit(&c.normalization(), &a.normalization()), 
+        Vector2::angle_unit(&c.normalization(), &a.normalization()) * num::RAD2DEG,
+        Vector2::angle_signed(&c.normalization(), &a.normalization()) * num::RAD2DEG);
+    println!("Vector2::angle_unit(a.normalization(), d.normalization()): {}r, {}d, {}ds, Vector2::angle_unit(d.normalization(), a.normalization()) = {}r, {}d, {}ds", 
+        Vector2::angle_unit(&a.normalization(), &d.normalization()), 
+        Vector2::angle_unit(&a.normalization(), &d.normalization()) * num::RAD2DEG, 
+        Vector2::angle_signed(&a.normalization(), &d.normalization()) * num::RAD2DEG, 
+        Vector2::angle_unit(&d.normalization(), &a.normalization()), 
+        Vector2::angle_unit(&d.normalization(), &a.normalization()) * num::RAD2DEG,
+        Vector2::angle_signed(&d.normalization(), &a.normalization()) * num::RAD2DEG);
+    println!("Vector2::angle_unit(a.normalization(), e.normalization()): {}r, {}d, {}ds, Vector2::angle_unit(e.normalization(), a.normalization()) = {}r, {}d, {}ds", 
+        Vector2::angle_unit(&a.normalization(), &e.normalization()), 
+        Vector2::angle_unit(&a.normalization(), &e.normalization()) * num::RAD2DEG, 
+        Vector2::angle_signed(&a.normalization(), &e.normalization()) * num::RAD2DEG, 
+        Vector2::angle_unit(&e.normalization(), &a.normalization()), 
+        Vector2::angle_unit(&e.normalization(), &a.normalization()) * num::RAD2DEG,
+        Vector2::angle_signed(&e.normalization(), &a.normalization()) * num::RAD2DEG);
 }

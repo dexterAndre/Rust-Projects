@@ -736,11 +736,6 @@ pub mod linalg {
             let t = 1.0 / s; return Vector2::new(self.x * t, self.y * t); } }
         impl DivAssign<f32> for Vector2 { fn div_assign(&mut self, s: f32) { 
             let t = 1.0 / s; self.x *= t; self.y *= t; } }
-        
-        // Remaining arithmetic / operations
-        impl Vector2 {
-
-        }
 
         // Geometry
         impl Vector2 {
@@ -832,36 +827,35 @@ pub mod linalg {
 
                 return Vector2::from_polar(arg, 1.0);
             }
-
-            // Queries
-            /*
-                ==
-                <
-                <=
-                >
-                >=
-                isNormalized
-                isParallel
-                isParallelUnit
-                isAntiParallel
-                isAntiParallelUnit
-                isCollinear
-                isCollinearUnit
-                isOrthogonal
-                isOrthogonalUnit
-                TestMode {
-                    // Test difference in magnitudes in world-space units
-                    AbsoluteMagnitude,
-                    // Test difference in magnitude in percentage
-                    RelativeMagnitude,
-                    // Test difference in coordinates in world-space units
-                    AbsoluteCoordinates,
-                    // Test difference in coordinates in percentage
-                    RelativeCoordinates
-                }
-            */
         }
 
+        /*
+            // Queries
+            ==
+            <
+            <=
+            >
+            >=
+            isNormalized
+            isParallel
+            isParallelUnit
+            isAntiParallel
+            isAntiParallelUnit
+            isCollinear
+            isCollinearUnit
+            isOrthogonal
+            isOrthogonalUnit
+            TestMode {
+                // Test difference in magnitudes in world-space units
+                AbsoluteMagnitude,
+                // Test difference in magnitude in percentage
+                RelativeMagnitude,
+                // Test difference in coordinates in world-space units
+                AbsoluteCoordinates,
+                // Test difference in coordinates in percentage
+                RelativeCoordinates
+            }
+        */
 
 
         pub struct Vector3 {

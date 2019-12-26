@@ -1,0 +1,12 @@
+D:\Git Repos\Rust-Projects\hello_roguelike\target\debug\deps\rand_core-df2097917cf78fec.rmeta: C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\lib.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\error.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\block.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\impls.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\le.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\os.rs
+
+D:\Git Repos\Rust-Projects\hello_roguelike\target\debug\deps\librand_core-df2097917cf78fec.rlib: C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\lib.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\error.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\block.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\impls.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\le.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\os.rs
+
+D:\Git Repos\Rust-Projects\hello_roguelike\target\debug\deps\rand_core-df2097917cf78fec.d: C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\lib.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\error.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\block.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\impls.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\le.rs C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\os.rs
+
+C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\lib.rs:
+C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\error.rs:
+C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\block.rs:
+C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\impls.rs:
+C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\le.rs:
+C:\Users\André\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.5.1\src\os.rs:

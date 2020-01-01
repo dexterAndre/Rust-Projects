@@ -219,7 +219,7 @@ fn test_rendering() {
 }
 
 fn test_math_profiling() {
-    pub use mathematics::linalg::vector::Vector2;
+    pub use mathematics::linalg::Vector2;
 
     let a = Vector2::new(3.0, 4.0);
     let b = Vector2::new(1.0, 5.0);
@@ -254,7 +254,8 @@ fn test_math_profiling() {
 }
 
 fn test_vector2() {
-    use mathematics::linalg::vector::Vector2;
+    use mathematics::linalg::Vector2;
+    use mathematics::linalg::Matrix2;
     use mathematics::num::constants as num;
 
     // Construction
@@ -386,8 +387,8 @@ fn test_vector2() {
     println!("a.mag_sqr(): {}", a.mag_sqr());
     println!("a.normalization(): {}", a.normalization().to_string());
     println!("a = {}", (a).to_string());
-    a.normalize();
-    println!("a.normalize(): {}", a.to_string());
+    // a.normalize();
+    // println!("a.normalize(): {}", a.to_string());
     a = Vector2::new(3.0, 4.0);
     println!("Resetting: a = {}", a.to_string());
     
@@ -475,4 +476,8 @@ fn test_vector2() {
         Vector2::angle_unit(&e.normalization(), &a.normalization()), 
         Vector2::angle_unit(&e.normalization(), &a.normalization()) * num::RAD2DEG,
         Vector2::angle_signed(&e.normalization(), &a.normalization()) * num::RAD2DEG);
+
+    let A2 = Matrix2::new(1.0, 2.0, 3.0, 4.0);
+    let B2 = Matrix2::new(3.0, 2.0, 0.0, 7.0);
+    println!("A2 * B2: {}", (A2 * B2).to_string());
 }

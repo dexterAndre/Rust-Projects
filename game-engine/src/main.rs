@@ -41,9 +41,9 @@ fn main() {
 
 
 fn main() {
-    test_vector2();
+    // test_vector2();
     // test_math_profiling();
-    // test_rendering();
+    test_rendering();
 }
 
 fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
@@ -68,10 +68,10 @@ fn test_rendering() {
     //      Setting lowest OpenGL version
     glfw.window_hint(glfw::WindowHint::ContextVersion(4, 5));
     //      Setting profile
-    glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core,));
+    glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
     let (mut window, events) = glfw
-    .create_window(800, 600, "Game Engine", glfw::WindowMode::Windowed)
-    .expect("Failed to create GLFW window.");
+        .create_window(800, 600, "Game Engine", glfw::WindowMode::Windowed)
+        .expect("Failed to create GLFW window.");
     window.set_key_polling(true);
     window.make_current();
     
@@ -102,46 +102,82 @@ fn test_rendering() {
     //      Setting up triangle
     let vertices: Vec<f32> = vec![
         // positions            // colors
-        -0.5,   -0.5,    0.0,   1.0,    0.0,    0.0,    // bottom right
-         0.5,   -0.5,    0.0,   0.0,    1.0,    0.0,    // bottom left
-         0.0,    0.5,    0.0,   0.0,    0.0,    1.0     // top
+        0.5,    0.5,    0.5,    1.0,    1.0,    1.0,    // Q1
+        -0.5,   0.5,    0.5,    1.0,    1.0,    0.0,    // Q2
+        -0.5,   -0.5,   0.5,    1.0,    0.0,    1.0,    // Q3
+        0.5,    -0.5,   0.5,    0.0,    1.0,    1.0,    // Q4
+        0.5,    0.5,    -0.5,   1.0,    0.0,    0.0,    // Q5
+        -0.5,   0.5,    -0.5,   0.0,    1.0,    0.0,    // Q6
+        -0.5,   -0.5,   -0.5,   0.0,    0.0,    1.0,    // Q7
+        0.5,    -0.5,   -0.5,   0.0,    0.0,    0.0,    // Q8
     ];
+    let indices: Vec<i32> = vec![
+        // Top
+        0, 1, 2,
+        0, 2, 3,
 
-    let mut vbo: gl::types::GLuint = 0;
-    unsafe {
-        gl::GenBuffers(1, &mut vbo);
-    }
+        // Back
+        4, 0, 1,
+        4, 1, 5,
 
-    // Data buffers
+        // Bottom
+        7, 4, 5,
+        7, 5, 6,
+
+        // Front
+        3, 2, 6,
+        3, 6, 7,
+
+        // Right
+        4, 0, 3,
+        4, 3, 7,
+
+        // Left
+        1, 5, 6,
+        1, 6, 2,
+    ];
+    // let vertices: Vec<f32> = vec![
+    //     // positions            // colors
+    //     -0.5,   -0.5,    0.0,   1.0,    0.0,    0.0,    // bottom right
+    //      0.5,   -0.5,    0.0,   0.0,    1.0,    0.0,    // bottom left
+    //      0.0,    0.5,    0.0,   0.0,    0.0,    1.0     // top
+    // ];
+
+    // Generating, binding, and filling buffers
+    //      1. Creating empty buffer variables
+    let mut VAO: gl::types::GLuint = 0;
+    let mut VBO: gl::types::GLuint = 0;
+    let mut EBO: gl::types::GLuint = 0;
+
     unsafe {
-        // Binding buffer
-        gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-        
-        // Feeding buffer data
+        //      2. Generating buffers in OpenGL
+        gl::GenVertexArrays(1, &mut VAO);
+        gl::GenBuffers(1, &mut VBO);
+        gl::GenBuffers(1, &mut EBO);
+
+        //      3.  Binding the vertex array
+        gl::BindVertexArray(VAO);
+
+        //      4.  Bind and set vertex buffers
+        //      4.1 Vertex buffer objct
+        gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
         gl::BufferData(
             gl::ARRAY_BUFFER,
             (vertices.len() * std::mem::size_of::<f32>()) as gl::types::GLsizeiptr,
             vertices.as_ptr() as *const gl::types::GLvoid,
             gl::STATIC_DRAW,
         );
-
-        // Unbind buffer
-        gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-    }
-
-    // Data layout
-    let mut vao: gl::types::GLuint = 0;
-    unsafe {
-        gl::GenVertexArrays(1, &mut vao);
-    }
-
-    unsafe {
-        // Binding buffer
-        gl::BindVertexArray(vao);
-
-        // Feeding buffer data
-        gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-        //      (same as "layout = 0" in vertex shader)
+        //      4.2 Element buffer object
+        gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, EBO);
+        gl::BufferData(
+            gl::ELEMENT_ARRAY_BUFFER,
+            (indices.len() * std::mem::size_of::<i32>()) as gl::types::GLsizeiptr,
+            indices.as_ptr() as *const gl::types::GLvoid,
+            gl::STATIC_DRAW,
+        );
+        
+        //      5. Configure vertex attributes
+        //          Same as "layout = 0" in vertex shader
         gl::EnableVertexAttribArray(0);
         gl::VertexAttribPointer(
             0,  // index of the generic vertex attribute ("layout (location = 0)")
@@ -151,7 +187,7 @@ fn test_rendering() {
             (6 * std::mem::size_of::<f32>()) as gl::types::GLint,   // stride (byte offset between consecutive attributes)
             std::ptr::null()    // offset of the first component
         );
-        //      we put color information at (location = 1)
+        //          We put color information at (location = 1)
         gl::EnableVertexAttribArray(1);
         gl::VertexAttribPointer(
             1,  // index of the generic vertex attribute ("layout (location = 0)")
@@ -161,10 +197,13 @@ fn test_rendering() {
             (6 * std::mem::size_of::<f32>()) as gl::types::GLint,   // stride (byte offset between consecutive attributes)
             (3 * std::mem::size_of::<f32>()) as *const gl::types::GLvoid
         );
-        // Unbinding vbo and vao
+        
+        //      6. Unbinding buffers
         gl::BindBuffer(gl::ARRAY_BUFFER, 0);
+        // gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, 0);
         gl::BindVertexArray(0);
     }
+
 
 
     
@@ -179,29 +218,27 @@ fn test_rendering() {
         for (_, event) in glfw::flush_messages(&events) {
             handle_window_event(&mut window, event);
         }
-        
-        // let t = TimerScoped::new();
-        // {
-        //     for i in 0..10_000 {
-        //         let a = 771415334 - 350105234;
-        //         // println!("Hello, world! {}", i);
-        //     }
-        // }
 
+        // Clearing color
         unsafe {
             gl::Clear(gl::COLOR_BUFFER_BIT);
             // gl::ClearColor(0.2, 0.3, 0.3, 1.0);
         }
-
         
         // Drawing geometry
         shader_program.set_used();
         unsafe {
-            gl::BindVertexArray(vao);
-            gl::DrawArrays(
-                gl::TRIANGLES, // mode
-                0, // starting index in the enabled arrays
-                3 // number of indices to be rendered
+            gl::BindVertexArray(VAO);
+            // gl::DrawArrays(
+            //     gl::TRIANGLES, // mode
+            //     0, // starting index in the enabled arrays
+            //     3 // number of indices to be rendered
+            // );
+            gl::DrawElements(
+                gl::TRIANGLES,      // mode
+                12,                  // ?
+                gl::UNSIGNED_INT,  // ?
+                0 as *const gl::types::GLvoid
             );
         }
         

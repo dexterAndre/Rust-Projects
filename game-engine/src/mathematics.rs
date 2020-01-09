@@ -75,569 +75,6 @@ pub mod num {
         pub const IOR_humanLens     : f32 = 1.406;              // 1.386 - 1.406
         pub const IOR_humanCornea   : f32 = 1.38466666667;      // 1.373 / 1.380 / 1.401
     }
-
-    // pub mod complex {
-    //     // Includes
-    //     use super::super::num::constants;
-    //     use std::ops::{ Add, AddAssign, Sub, SubAssign, Neg, Mul, MulAssign, Div, DivAssign };
-
-    //     // Complex number form:         c = a + bi
-    //     // Complex numbers base law:    i^2 = (-1)
-    //     #[derive(Debug)]
-    //     pub struct Complex {
-    //         a: f32,
-    //         b: f32,
-    //     }
-
-    //     // Construction
-    //     impl Complex {
-    //         pub fn new(s: f32, t: f32) -> Self {
-    //             return Self {
-    //                 a: s,
-    //                 b: t
-    //             };
-    //         }
-    //         pub fn from_polar(radian: f32, radius: f32) -> Self {
-    //             return Self {
-    //                 a: f32::cos(radian) * radius,
-    //                 b: f32::sin(radian) * radius
-    //             };
-    //         }
-    //         pub fn from_complex(c: Complex) -> Self {
-    //             return Self {
-    //                 a: c.a,
-    //                 b: c.b
-    //             };
-    //         }
-    //     }
-
-    //     // Prefabrication
-    //     impl Complex {
-    //         pub fn one() -> Self {
-    //             return Self {
-    //                 a: 1.0,
-    //                 b: 1.0
-    //             };
-    //         }
-    //         pub fn zero() -> Self {
-    //             return Self {
-    //                 a: 0.0,
-    //                 b: 0.0
-    //             };
-    //         }
-    //         pub fn right() -> Self {
-    //             return Self {
-    //                 a: 1.0,
-    //                 b: 0.0
-    //             };
-    //         }
-    //         pub fn left() -> Self {
-    //             return Self {
-    //                 a: -1.0,
-    //                 b: 0.0
-    //             };
-    //         }
-    //         pub fn up() -> Self {
-    //             return Self {
-    //                 a: 0.0,
-    //                 b: 1.0
-    //             };
-    //         }
-    //         pub fn down() -> Self {
-    //             return Self {
-    //                 a: 0.0,
-    //                 b: -1.0
-    //             };
-    //         }
-    //         pub fn QI() -> Self {
-    //             return Self {
-    //                 a: 1.0,
-    //                 b: 1.0
-    //             };
-    //         }
-    //         pub fn QIn() -> Self {
-    //             return Self {
-    //                 a: constants::SQRT2OVER2,
-    //                 b: constants::SQRT2OVER2
-    //             };
-    //         }
-    //         pub fn QII() -> Self {
-    //             return Self {
-    //                 a: -constants::SQRT2OVER2,
-    //                 b: constants::SQRT2OVER2
-    //             };
-    //         }
-    //         pub fn QIII() -> Self {
-    //             return Self {
-    //                 a: -constants::SQRT2OVER2,
-    //                 b: -constants::SQRT2OVER2
-    //             };
-    //         }
-    //         pub fn QIV() -> Self {
-    //             return Self {
-    //                 a: constants::SQRT2OVER2,
-    //                 b: -constants::SQRT2OVER2
-    //             };
-    //         }
-    //     }
-
-    //     // Swizzling
-    //     impl Complex {
-    //         pub fn aa(&self) -> Self {
-    //             return Self {
-    //                 a: self.a,
-    //                 b: self.a
-    //             };
-    //         }
-    //         pub fn ab(&self) -> Self {
-    //             return Self {
-    //                 a: self.a,
-    //                 b: self.b
-    //             };
-    //         }
-    //         pub fn ba(&self) -> Self {
-    //             return Self {
-    //                 a: self.b, 
-    //                 b: self.a
-    //             };
-    //         }
-    //         pub fn bb(&self) -> Self {
-    //             return Self {
-    //                 a: self.b,
-    //                 b: self.b
-    //             };
-    //         }
-    //     }
-        
-    //     // Utilities
-    //     impl Complex {
-    //         pub fn to_string(&self) -> String {
-    //             return format!("{} + {}i", self.a, self.b);
-    //         }
-    //         pub fn to_latex(&self) -> String {
-    //             return format!("{} + {}i", self.a, self.b);
-    //         }
-    //     }
-        
-    //     // Arithmetic
-    //     //      Addition
-    //     impl Add<Complex> for Complex {
-    //         type Output = Complex;
-    //         fn add(self, c: Complex) -> Complex {
-    //             return Self {
-    //                 a: self.a + c.a,
-    //                 b: self.b + c.b
-    //             };
-    //         }
-    //     }
-    //     impl AddAssign<Complex> for Complex {
-    //         fn add_assign(&mut self, c: Complex) {
-    //             self.a += c.a;
-    //             self.b += c.b;
-    //         }
-    //     }
-    //     //      Subtraction
-    //     impl Sub<Complex> for Complex {
-    //         type Output = Complex;
-    //         fn sub(self, c: Complex) -> Complex {
-    //             return Self {
-    //                 a: self.a - c.a,
-    //                 b: self.b - c.b
-    //             };
-    //         }
-    //     }
-    //     impl SubAssign<Complex> for Complex {
-    //         fn sub_assign(&mut self, c: Complex) {
-    //             self.a -= c.a;
-    //             self.b -= c.b;
-    //         }
-    //     }
-    //     impl Neg for Complex {
-    //         type Output = Complex;
-    //         fn neg(self) -> Complex {
-    //             return Self {
-    //                 a: -self.a,
-    //                 b: -self.b
-    //             };
-    //         }
-    //     }
-    //     //      Multiplication
-    //     impl Mul<f32> for Complex {
-    //         type Output = Complex;
-    //         fn mul(self, s: f32) -> Complex {
-    //             return Self {
-    //                 a: self.a * s,
-    //                 b: self.b * s
-    //             };
-    //         }
-    //     }
-    //     impl MulAssign<f32> for Complex {
-    //         fn mul_assign(&mut self, s: f32) {
-    //             self.a *= s;
-    //             self.b *= s;
-    //         }
-    //     }
-    //     impl Mul<Complex> for Complex {
-    //         type Output = Complex;
-    //         fn mul(self, c: Complex) -> Complex {
-    //             return Self {
-    //                 a: (self.a * c.a - self.b * c.b), 
-    //                 b: (self.a * c.b + self.b * c.a)
-    //             };
-    //         }
-    //     }
-    //     impl MulAssign<Complex> for Complex {
-    //         fn mul_assign(&mut self, c: Complex) {
-    //             self.a = (self.a * c.a - self.b * c.b);
-    //             self.b = (self.a * c.b + self.b * c.a);
-    //         }
-    //     }
-    //     //      Division
-    //     impl Div<f32> for Complex {
-    //         type Output = Complex;
-    //         fn div(self, s: f32) -> Complex {
-    //             let t = 1.0 / s;
-    //             return Self {
-    //                 a: self.a * t,
-    //                 b: self.b * t
-    //             };
-    //         }
-    //     }
-    //     impl DivAssign<f32> for Complex {
-    //         fn div_assign(&mut self, s: f32) {
-    //             let t = 1.0 / s;
-    //             self.a *= t;
-    //             self.b *= t;
-    //         }
-    //     }
-    //     impl Div<Complex> for Complex {
-    //         type Output = Complex;
-    //         fn div(self, c: Complex) -> Complex {
-    //             return Self {
-    //                 a: (self.a * c.a + self.b * c.b) / (c.a * c.a + c.b * c.b),
-    //                 b: (self.b * c.a - self.a * c.b) / (c.a * c.a + c.b * c.b)
-    //             }
-    //         }
-    //     }
-    //     impl DivAssign<Complex> for Complex {
-    //         fn div_assign(&mut self, c: Complex) {
-    //             self.a = (self.a * c.a + self.b * c.b) / (c.a * c.a + c.b * c.b);
-    //             self.b = (self.b * c.a - self.a * c.b) / (c.a * c.a + c.b * c.b);
-    //         }
-    //     }
-
-    //     // Remaining arithmetic / operations
-    //     impl Complex {
-    //         //      Conjugate
-    //         fn conjugate(&self) -> Complex {
-    //             return Complex::new(
-    //                 self.a, 
-    //                 -self.b);
-    //         }
-    //         //      Inverse
-    //         fn inverse(&self) -> Complex {
-    //             let denom = 1.0 / self.mag_sqr();
-    //             return Complex::new(
-    //                 self.a * denom,
-    //                 -self.b * denom
-    //             );
-    //         }
-    //     }
-
-    //     // Geometry
-    //     impl Complex {
-    //         //      Magnitude
-    //         fn mag(&self) -> f32 {
-    //             return f32::sqrt(self.a * self.a + self.b * self.b);
-    //         }
-    //         fn mag_sqr(&self) -> f32 {
-    //             return self.a * self.a + self.b * self.b;
-    //         }
-    //         //      Rotation
-    //         fn rotate(c: Complex, s: f32) -> Complex {
-    //             let r = Complex::new(f32::cos(s), f32::sin(s));
-    //             let c2 = c * r;
-    //             return c2;
-    //         }
-    //     }
-    // }
-
-    // pub mod dual {
-    //     // Guidance: http://www.dtecta.com/files/GDC13_vandenBergen_Gino_Math_Tut.pdf
-    //     // Paper on Automatic Differentiation (AD): https://www.duo.uio.no/bitstream/handle/10852/41535/Kjelseth-Master.pdf?sequence=9 
-    //     // Introduction to AD: https://alexey.radul.name/ideas/2013/introduction-to-automatic-differentiation/
-
-    //     // Includes
-    //     use super::super::num::constants;
-    //     use std::ops::{ Add, AddAssign, Sub, SubAssign, Neg, Mul, MulAssign, Div, DivAssign };
-
-    //     // Dual number form:            d = a + bε
-    //     // Dual numbers base law:       ε^2 = 0
-    //     #[derive(Debug)]
-    //     pub struct Dual {
-    //         a: f32,
-    //         b: f32,
-    //     }
-
-    //     // Construction
-    //     impl Dual {
-    //         pub fn new(s: f32, t: f32) -> Self {
-    //             return Self {
-    //                 a: s,
-    //                 b: t
-    //             };
-    //         }
-    //         pub fn from_polar(radian: f32, radius: f32) -> Self {
-    //             return Self {
-    //                 a: f32::cos(radian) * radius,
-    //                 b: f32::sin(radian) * radius
-    //             };
-    //         }
-    //         pub fn from_dual(d: Dual) -> Self {
-    //             return Self {
-    //                 a: d.a,
-    //                 b: d.b
-    //             };
-    //         }
-    //     }
-
-    //     // Prefabrication
-    //     impl Dual {
-    //         pub fn one() -> Self {
-    //             return Self {
-    //                 a: 1.0,
-    //                 b: 1.0
-    //             };
-    //         }
-    //         pub fn zero() -> Self {
-    //             return Self {
-    //                 a: 0.0,
-    //                 b: 0.0
-    //             };
-    //         }
-    //         pub fn right() -> Self {
-    //             return Self {
-    //                 a: 1.0,
-    //                 b: 0.0
-    //             };
-    //         }
-    //         pub fn left() -> Self {
-    //             return Self {
-    //                 a: -1.0,
-    //                 b: 0.0
-    //             };
-    //         }
-    //         pub fn up() -> Self {
-    //             return Self {
-    //                 a: 0.0,
-    //                 b: 1.0
-    //             };
-    //         }
-    //         pub fn down() -> Self {
-    //             return Self {
-    //                 a: 0.0,
-    //                 b: -1.0
-    //             };
-    //         }
-    //         pub fn QI() -> Self {
-    //             return Self {
-    //                 a: 1.0,
-    //                 b: 1.0
-    //             };
-    //         }
-    //         pub fn QIn() -> Self {
-    //             return Self {
-    //                 a: constants::SQRT2OVER2,
-    //                 b: constants::SQRT2OVER2
-    //             };
-    //         }
-    //         pub fn QII() -> Self {
-    //             return Self {
-    //                 a: -constants::SQRT2OVER2,
-    //                 b: constants::SQRT2OVER2
-    //             };
-    //         }
-    //         pub fn QIII() -> Self {
-    //             return Self {
-    //                 a: -constants::SQRT2OVER2,
-    //                 b: -constants::SQRT2OVER2
-    //             };
-    //         }
-    //         pub fn QIV() -> Self {
-    //             return Self {
-    //                 a: constants::SQRT2OVER2,
-    //                 b: -constants::SQRT2OVER2
-    //             };
-    //         }
-    //     }
-
-    //     // Swizzling
-    //     impl Dual {
-    //         pub fn aa(&self) -> Self {
-    //             return Self {
-    //                 a: self.a,
-    //                 b: self.a
-    //             };
-    //         }
-    //         pub fn ab(&self) -> Self {
-    //             return Self {
-    //                 a: self.a,
-    //                 b: self.b
-    //             };
-    //         }
-    //         pub fn ba(&self) -> Self {
-    //             return Self {
-    //                 a: self.b, 
-    //                 b: self.a
-    //             };
-    //         }
-    //         pub fn bb(&self) -> Self {
-    //             return Self {
-    //                 a: self.b,
-    //                 b: self.b
-    //             };
-    //         }
-    //     }
-
-    //     // Utilities
-    //     impl Dual {
-    //         pub fn to_string(&self) -> String {
-    //             return format!("{} + {}ε", self.a, self.b);
-    //         }
-    //         pub fn to_latex(&self) -> String {
-    //             return format!("{} + {}ε", self.a, self.b);
-    //         }
-    //     }
-
-    //             // Arithmetic
-    //     //      Addition
-    //     impl Add<Dual> for Dual {
-    //         type Output = Dual;
-    //         fn add(self, d: Dual) -> Dual {
-    //             return Self {
-    //                 a: self.a + d.a,
-    //                 b: self.b + d.b
-    //             };
-    //         }
-    //     }
-    //     impl AddAssign<Dual> for Dual {
-    //         fn add_assign(&mut self, d: Dual) {
-    //             self.a += d.a;
-    //             self.b += d.b;
-    //         }
-    //     }
-    //     //      Subtraction
-    //     impl Sub<Dual> for Dual {
-    //         type Output = Dual;
-    //         fn sub(self, d: Dual) -> Dual {
-    //             return Self {
-    //                 a: self.a - d.a,
-    //                 b: self.b - d.b
-    //             };
-    //         }
-    //     }
-    //     impl SubAssign<Dual> for Dual {
-    //         fn sub_assign(&mut self, d: Dual) {
-    //             self.a -= d.a;
-    //             self.b -= d.b;
-    //         }
-    //     }
-    //     impl Neg for Dual {
-    //         type Output = Dual;
-    //         fn neg(self) -> Dual {
-    //             return Self {
-    //                 a: -self.a,
-    //                 b: -self.b
-    //             };
-    //         }
-    //     }
-    //     //      Multiplication
-    //     impl Mul<f32> for Dual {
-    //         type Output = Dual;
-    //         fn mul(self, s: f32) -> Dual {
-    //             return Self {
-    //                 a: self.a * s,
-    //                 b: self.b * s
-    //             };
-    //         }
-    //     }
-    //     impl MulAssign<f32> for Dual {
-    //         fn mul_assign(&mut self, s: f32) {
-    //             self.a *= s;
-    //             self.b *= s;
-    //         }
-    //     }
-    //     impl Mul<Dual> for Dual {
-    //         type Output = Dual;
-    //         fn mul(self, d: Dual) -> Dual {
-    //             return Self {
-    //                 a: (self.a * d.a), 
-    //                 b: (self.a * d.b + self.b * d.a)
-    //             };
-    //         }
-    //     }
-    //     impl MulAssign<Dual> for Dual {
-    //         fn mul_assign(&mut self, d: Dual) {
-    //             self.a = (self.a * d.a);
-    //             self.b = (self.a * d.b + self.b * d.a);
-    //         }
-    //     }
-    //     //      Division
-    //     impl Div<f32> for Dual {
-    //         type Output = Dual;
-    //         fn div(self, s: f32) -> Dual {
-    //             let t = 1.0 / s;
-    //             return Self {
-    //                 a: self.a * t,
-    //                 b: self.b * t
-    //             };
-    //         }
-    //     }
-    //     impl DivAssign<f32> for Dual {
-    //         fn div_assign(&mut self, s: f32) {
-    //             let t = 1.0 / s;
-    //             self.a *= t;
-    //             self.b *= t;
-    //         }
-    //     }
-    //     impl Div<Dual> for Dual {
-    //         type Output = Dual;
-    //         fn div(self, d: Dual) -> Dual {
-    //             let denom = 1.0 / (d.a * d.a);
-    //             return Self {
-    //                 a: (self.a * d.a) * denom,
-    //                 b: (self.b * d.a - self.a * d.b) * denom
-    //             }
-    //         }
-    //     }
-    //     impl DivAssign<Dual> for Dual {
-    //         fn div_assign(&mut self, d: Dual) {
-    //             let denom = 1.0 / (d.a * d.a);
-    //             self.a = (self.a * d.a) * denom;
-    //             self.b = (self.b * d.a - self.a * d.b) * denom;
-    //         }
-    //     }
-
-    //     // Remaining arithmetic / operations
-    //     impl Dual {
-    //         //      Conjugate
-    //         fn conjugate(&self) -> Dual {
-    //             return Dual::new(
-    //                 self.a,
-    //                 -self.b
-    //             );
-    //         }
-    //         //      Inverse
-    //         //  (Does not exist)
-    //     }
-
-    //     // Geometry
-    //     impl Dual {
-    //         fn mag(&self) -> f32 {
-    //             return self.a;
-    //         }
-    //     }
-    // }
 }
 
 pub mod linalg {
@@ -665,7 +102,7 @@ pub mod linalg {
             ij = k      jk = i      ki = j
             ji = -k     kj = -i     ik = -j
     */
-    // #[derive(Debug, Copy, Clone)] pub struct Quaternion { s: f32, i: f32, j: f32, k: f32 }
+    #[derive(Debug, Copy, Clone)] pub struct Quaternion { s: f32, i: f32, j: f32, k: f32 }
     // #[derive(Debug, Copy, Clone)] pub struct QuaternionDual { /* ? */ }
 
     /*
@@ -691,25 +128,17 @@ pub mod linalg {
     impl Matrix4 { pub fn dia(&self, n: usize)          -> Vector4 { return Vector4::new(self.e[0][0], self.e[1][1], self.e[2][2], self.e[3][3]); } }
     
     // Construction
-    impl Vector2 { pub fn new(a: f32, b: f32)                       -> Self { return Self { x: a, y: b }; } }
-    impl Complex { pub fn new(a: f32, b: f32)                       -> Self { return Self { r: a, i: b}; } }
-    impl Dual { pub fn new(a: f32, b: f32)                          -> Self { return Self { r: a, e: b}; } }
-    impl Vector3 { pub fn new(a: f32, b: f32, c: f32)               -> Self { return Self { x: a, y: b, z: c }; } }
-    impl Vector4 { pub fn new(a: f32, b: f32, c: f32, d: f32)       -> Self { return Self { x: a, y: b, z: c, w: d }; } }
-    impl Vector2 { pub fn from_polar(angle: f32, radius: f32)       -> Self { return Self::new(f32::cos(angle), f32::sin(angle)) * radius; } }
-    impl Complex { pub fn from_polar(angle: f32, radius: f32)       -> Self { return Self::new(f32::cos(angle), f32::sin(angle)) * radius; } }
-    impl Dual { pub fn from_polar(angle: f32, radius: f32)          -> Self { return Self::new(f32::cos(angle), f32::sin(angle)) * radius; } }
-    impl Vector3 { pub fn from_spherical(r: f32, t: f32, p: f32)    -> Self { return Self::new(f32::sin(p) * f32::cos(t), f32::sin(p) * f32::sin(t), f32::cos(p)) * r; } }
-    impl Vector2 { pub fn from_vector2(v: &Vector2)                 -> Self { return Self::new(v.x, v.y); } }
-    impl Vector3 { pub fn from_vector2(v: &Vector2, c: f32)         -> Self { return Self::new(v.x, v.y, c); } }
-    impl Vector4 { pub fn from_vector2(v: &Vector2, c: f32, d: f32) -> Self { return Self::new(v.x, v.y, c, d); } }
-    impl Vector2 { pub fn from_vector3(v: &Vector3)                 -> Self { return Self::new(v.x, v.y); } }
-    impl Vector3 { pub fn from_vector3(v: &Vector3)                 -> Self { return Self::new(v.x, v.y, v.z); } }
-    impl Vector4 { pub fn from_vector3(v: &Vector3, d: f32)         -> Self { return Self::new(v.x, v.y, v.z, d); } }
-    impl Vector2 { pub fn from_vector4(v: &Vector4)                 -> Self { return Self::new(v.x, v.y); } }
-    impl Vector3 { pub fn from_vector4(v: &Vector4)                 -> Self { return Self::new(v.x, v.y, v.z); } }
-    impl Vector4 { pub fn from_vector4(v: &Vector4)                 -> Self { return Self::new(v.x, v.y, v.z, v.w); } }
-    impl Matrix2 { pub fn new(  a: f32, b: f32, 
+    impl Vector2    { pub fn new(a: f32, b: f32)                        -> Self { return Self { x: a, y: b }; } }
+    impl Complex    { pub fn new(a: f32, b: f32)                        -> Self { return Self { r: a, i: b}; } }
+    impl Dual       { pub fn new(a: f32, b: f32)                        -> Self { return Self { r: a, e: b}; } }
+    impl Vector3    { pub fn new(a: f32, b: f32, c: f32)                -> Self { return Self { x: a, y: b, z: c }; } }
+    impl Vector4    { pub fn new(a: f32, b: f32, c: f32, d: f32)        -> Self { return Self { x: a, y: b, z: c, w: d }; } }
+    impl Quaternion { pub fn new(a: f32, b: f32, c: f32, d: f32)        -> Self { return Self { s: a, i: b, j: c, k: d }; } }
+    impl Vector2    { pub fn from_polar(angle: f32, radius: f32)        -> Self { return Self::new(f32::cos(angle), f32::sin(angle)) * radius; } }
+    impl Complex    { pub fn from_polar(angle: f32, radius: f32)        -> Self { return Self::new(f32::cos(angle), f32::sin(angle)) * radius; } }
+    impl Dual       { pub fn from_polar(angle: f32, radius: f32)        -> Self { return Self::new(f32::cos(angle), f32::sin(angle)) * radius; } }
+    impl Vector3    { pub fn from_spherical(r: f32, t: f32, p: f32)     -> Self { return Self::new(f32::sin(p) * f32::cos(t), f32::sin(p) * f32::sin(t), f32::cos(p)) * r; } }
+    impl Matrix2    { pub fn new(  a: f32, b: f32, 
                                 c: f32, d: f32) -> Self {
         return Self { e:       [[a, c],
                                 [b, d]] } } }
@@ -741,35 +170,79 @@ pub mod linalg {
     //     // Unfinished
     // }
     
+    //      Transformation Constructors
+    impl Complex { pub fn from_rotor(angle: f32)                        -> Self { return Self::new(f32::cos(angle), f32::sin(angle)); } }
+
     // Conversion Methods
-    impl Vector2 {
-        pub fn to_complex(&self)        -> Complex { return Complex::new(self.x, self.y); }
-        pub fn to_dual(&self)           -> Dual { return Dual::new(self.x, self.y); }
-        pub fn to_vector3(&self)        -> Vector3 { return Vector3::new(self.x, self.y, 0.0); }
-        pub fn to_vector4(&self)        -> Vector4 { return Vector4::new(self.x, self.y, 0.0, 0.0); }
-        // pub fn to_quaternion(&self)     -> Quaternion { return Quaternion::new(self.x, self.y, 0.0, 0.0); }
-        // pub fn to_quaternion(&self)     -> Quaternion { return QuaternionDual::new(/* ? */)); }
-    }
-    // impl Complex { /* Unfinished */}
-    // impl Dual { /* Unfinished */}
-    impl Vector3 {
-        pub fn to_vector2(&self)        -> Vector2 { return Vector2::new(self.x, self.y); }
-        pub fn to_complex(&self)        -> Complex { return Complex::new(self.x, self.y); }
-        pub fn to_dual(&self)           -> Dual { return Dual::new(self.x, self.y); }
-        pub fn to_vector4(&self)        -> Vector4 { return Vector4::new(self.x, self.y, self.z, 0.0); }
-        // pub fn to_quaternion(&self)     -> Quaternion { return Quaternion::new(self.x, self.y, 0.0, 0.0); }
-        // pub fn to_quaternion(&self)     -> Quaternion { return QuaternionDual::new(/* ? */)); }
-    }
-    impl Vector4 {
-        pub fn to_vector2(&self)        -> Vector2 { return Vector2::new(self.x, self.y); }
-        pub fn to_complex(&self)        -> Complex { return Complex::new(self.x, self.y); }
-        pub fn to_dual(&self)           -> Dual { return Dual::new(self.x, self.y); }
-        pub fn to_vector3(&self)        -> Vector3 { return Vector3::new(self.x, self.y, self.z); }
-        // pub fn to_quaternion(&self)     -> Quaternion { return Quaternion::new(self.x, self.y, 0.0, 0.0); }
-        // pub fn to_quaternion(&self)     -> Quaternion { return QuaternionDual::new(/* ? */)); }
-    }
-    // impl Quaternion { /* Unfinished */}
-    // impl QuaternionDual { /* Unfinished */}
+    impl Vector2    { pub fn from_vector2(v: &Vector2)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Complex    { pub fn from_vector2(v: &Vector2)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Dual       { pub fn from_vector2(v: &Vector2)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Vector3    { pub fn from_vector2(v: &Vector2, c: f32)          -> Self { return Self::new(v.x, v.y, c); } }
+    impl Vector4    { pub fn from_vector2(v: &Vector2, c: f32, d: f32)  -> Self { return Self::new(v.x, v.y, c, d); } }
+    impl Vector2    { pub fn from_complex(c: &Complex)                  -> Self { return Self::new(c.r, c.i); } }
+    impl Complex    { pub fn from_complex(c: &Complex)                  -> Self { return Self::new(c.r, c.i); } }
+    impl Dual       { pub fn from_complex(c: &Complex)                  -> Self { return Self::new(c.r, c.i); } }
+    impl Vector3    { pub fn from_complex(c: &Complex, c2: f32)         -> Self { return Self::new(c.r, c.i, c2); } }
+    impl Vector4    { pub fn from_complex(c: &Complex, c2: f32, d: f32) -> Self { return Self::new(c.r, c.i, c2, d); } }
+    impl Vector2    { pub fn from_dual(c: &Dual)                        -> Self { return Self::new(c.r, c.e); } }
+    impl Complex    { pub fn from_dual(d: &Dual)                        -> Self { return Self::new(d.r, d.e); } }
+    impl Dual       { pub fn from_dual(d: &Dual)                        -> Self { return Self::new(d.r, d.e); } }
+    impl Vector3    { pub fn from_dual(d: &Dual, c: f32)                -> Self { return Self::new(d.r, d.e, c); } }
+    impl Vector4    { pub fn from_dual(d: &Dual, c: f32, d2: f32)       -> Self { return Self::new(d.r, d.e, c, d2); } }
+    impl Vector2    { pub fn from_vector3(v: &Vector3)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Complex    { pub fn from_vector3(v: &Vector3)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Dual       { pub fn from_vector3(v: &Vector3)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Vector3    { pub fn from_vector3(v: &Vector3)                  -> Self { return Self::new(v.x, v.y, v.z); } }
+    impl Vector4    { pub fn from_vector3(v: &Vector3, d: f32)          -> Self { return Self::new(v.x, v.y, v.z, d); } }
+    impl Vector2    { pub fn from_vector4(v: &Vector4)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Complex    { pub fn from_vector4(v: &Vector4)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Dual       { pub fn from_vector4(v: &Vector4)                  -> Self { return Self::new(v.x, v.y); } }
+    impl Vector3    { pub fn from_vector4(v: &Vector4)                  -> Self { return Self::new(v.x, v.y, v.z); } }
+    impl Vector4    { pub fn from_vector4(v: &Vector4)                  -> Self { return Self::new(v.x, v.y, v.z, v.w); } }
+    //      https://stackoverflow.com/questions/36138768/finding-minor-matrices-of-3x3-matrix-c
+    impl Matrix2 { pub fn minor(&self, i: usize, j: usize)              -> f32 { return self.e[1 - i][1 - j]; } }
+    impl Matrix3 { pub fn minor(&self, i: usize, j: usize)              -> Matrix2 {
+        let mut M = Matrix2::zero();
+        let mut row = 0;
+        let mut col = 0;
+        for a in 0..2 {
+            row = a;
+            if i < a {
+                row = row - 1;
+            } 
+            for b in 0..2 {
+                col = b;
+                if j < b {
+                    col = col - 1;
+                }
+                if a != i && b != j {
+                    M.e[row][col] = self.e[a][b];
+                }
+            }
+        }
+        return M; 
+    } }
+    impl Matrix4 { pub fn minor(&self, i: usize, j: usize)              -> Matrix3 {
+        let mut M = Matrix3::zero();
+        let mut row = 0;
+        let mut col = 0;
+        for a in 0..3 {
+            row = a;
+            if i < a {
+                row = row - 1;
+            } 
+            for b in 0..3 {
+                col = b;
+                if j < b {
+                    col = col - 1;
+                }
+                if a != i && b != j {
+                    M.e[row][col] = self.e[a][b];
+                }
+            }
+        }
+        return M; 
+    } }
 
     // Prefabrication
     impl Vector2 { pub fn one()         -> Self { return Self::new(1.0, 1.0); } }
@@ -812,7 +285,6 @@ pub mod linalg {
     impl Vector2 { pub fn Q4n()         -> Self { return Self::new(num::SQRT2OVER2, num::SQRT2OVER2); } }
     impl Vector3 { pub fn Q4()          -> Self { return Self::new(1.0, 1.0, 1.0); } }
     impl Vector3 { pub fn Q4n()         -> Self { return Self::new(num::SQRT3OVER3, num::SQRT3OVER3, num::SQRT3OVER3); } }
-
     impl Vector3 { pub fn Q5()          -> Self { return Self::new(1.0, 1.0, -1.0); } }
     impl Vector3 { pub fn Q5n()         -> Self { return Self::new(num::SQRT3OVER3, num::SQRT3OVER3, -num::SQRT3OVER3); } }
     impl Vector3 { pub fn Q6()          -> Self { return Self::new(-1.0, 1.0, -1.0); } }
@@ -835,8 +307,6 @@ pub mod linalg {
         pub fn yx(&self)    -> Self { return Vector2::new(self.y, self.x); }
         pub fn yy(&self)    -> Self { return Vector2::new(self.y, self.y); }
     }
-    // impl Complex { /* Unfinished */ }
-    // impl Dual { /* Unfinished */ }
     impl Vector3 {
         pub fn xxx(&self)   -> Self { return Vector3::new(self.x, self.x, self.x); }
         pub fn xxy(&self)   -> Self { return Vector3::new(self.x, self.x, self.y); }
@@ -1215,8 +685,6 @@ pub mod linalg {
         pub fn wwwz(&self)  -> Self { return Vector4::new(self.w, self.w, self.w, self.z); }
         pub fn wwww(&self)  -> Self { return Vector4::new(self.w, self.w, self.w, self.w); }
     }
-    // impl Quaternion { /* Unfinished */ }
-    // impl QuaternionDual { /* Unfinished */ }
 
     // Utilities
     //      (Also implement to_latex)
@@ -1355,46 +823,29 @@ pub mod linalg {
         self.e[3][0] -= m.e[3][0];  self.e[3][1] -= m.e[3][1];  self.e[3][2] -= m.e[3][2];  self.e[3][3] -= m.e[3][3]; } }
     impl Neg for Vector2 { type Output = Self; fn neg(self) -> Self { 
         return Self::new(-self.x, -self.y); } }
-    impl Neg for Complex { type Output = Self; fn neg(self) -> Self { 
-        return Self::new(-self.r, -self.i); } }
-    impl Neg for Dual { type Output = Self; fn neg(self) -> Self { 
-        return Self::new(-self.r, -self.e); } }
     impl Neg for Vector3 { type Output = Self; fn neg(self) -> Self { 
         return Self::new(-self.x, -self.y, -self.z); } }
     impl Neg for Vector4 { type Output = Self; fn neg(self) -> Self { 
         return Self::new(-self.x, -self.y, -self.z, -self.w); } }
-    impl Neg for Matrix2 { type Output = Self; fn neg(self) -> Self { 
-        return Self::new(
-            -self.e[0][0], -self.e[0][1], 
-            -self.e[1][0], -self.e[1][1]); } }
-    impl Neg for Matrix3 { type Output = Self; fn neg(self) -> Self { 
-        return Self::new(
-            -self.e[0][0], -self.e[0][1], -self.e[0][2],
-            -self.e[1][0], -self.e[1][1], -self.e[1][2],
-            -self.e[2][0], -self.e[2][1], -self.e[2][2]); } }
-    impl Neg for Matrix4 { type Output = Self; fn neg(self) -> Self { 
-        return Self::new(
-            -self.e[0][0], -self.e[0][1], -self.e[0][2], -self.e[0][3],
-            -self.e[1][0], -self.e[1][1], -self.e[1][2], -self.e[1][3],
-            -self.e[2][0], -self.e[2][1], -self.e[2][2], -self.e[2][3],
-            -self.e[3][0], -self.e[3][1], -self.e[3][2], -self.e[3][3]); } }
-    //      Special unary operator (conjugate, transpose, etc.)
-    impl Not for Complex { type Output = Self; fn not(self) -> Self {
+    //      Special unary operators (conjugate, transpose, inverse, etc.)
+    //          Conjugate (-(a + bi) = (a - bi))
+    impl Neg for Complex { type Output = Self; fn neg(self) -> Self { 
         return Self::new(self.r, -self.i); } }
-    impl Not for Dual { type Output = Self; fn not(self) -> Self {
+    impl Neg for Dual { type Output = Self; fn neg(self) -> Self { 
         return Self::new(self.r, -self.e); } }
-    impl Not for Matrix2 { type Output = Self; fn not(self) -> Self {
+    //          Transpose
+    impl Neg for Matrix2 { type Output = Self; fn neg(self) -> Self {
         let e01 = self.e[0][1];
         return Self::new(
             self.e[0][0],   self.e[1][0],
             e01,            self.e[1][1]); } }
-    impl Not for Matrix3 { type Output = Self; fn not(self) -> Self {
+    impl Neg for Matrix3 { type Output = Self; fn neg(self) -> Self {
         let e01 = self.e[0][1]; let e02 = self.e[0][2]; let e12 = self.e[1][2];
         return Self::new(
             self.e[0][0],   self.e[1][0],   self.e[2][0],
             e01,            self.e[1][1],   self.e[2][1],
             e02,            e12,            self.e[2][2]); } }
-    impl Not for Matrix4 { type Output = Self; fn not(self) -> Self {
+    impl Neg for Matrix4 { type Output = Self; fn neg(self) -> Self {
         let e01 = self.e[0][1]; let e02 = self.e[0][2]; let e03 = self.e[0][3];
         let e12 = self.e[1][2]; let e13 = self.e[1][3]; let e23 = self.e[2][3];
         return Self::new(
@@ -1402,6 +853,19 @@ pub mod linalg {
             e01,            self.e[1][1],   self.e[2][1],   self.e[3][1],
             e02,            e12,            self.e[2][2],   self.e[3][2],
             e03,            e13,            e23,            self.e[3][3]); } }
+    //          Inverse
+    impl Not for Complex { type Output = Self; fn not(self) -> Self {
+        let d = 1.0 / self.mag_sqr();
+        return (-self) * d; } }
+    // impl Not for Matrix2 { type Output = Self; fn not(self) -> Self {
+
+    // }}
+    // impl Not for Matrix3 { type Output = Self; fn not(self) -> Self {
+
+    // }}
+    // impl Not for Matrix4 { type Output = Self; fn not(self) -> Self {
+
+    // }}
     //      Scalar-Struct Multiplication: { a * s, a *= s, s * a }
     impl Mul<f32> for Vector2 { type Output = Self; fn mul(self, s: f32) -> Self { 
         return Self::new(self.x * s, self.y * s); } }
@@ -1615,6 +1079,27 @@ pub mod linalg {
     impl Complex { pub fn mag(&self)            -> f32 { return f32::sqrt(self.r * self.r + self.i * self.i); } }
     impl Vector3 { pub fn mag(&self)            -> f32 { return f32::sqrt((*self) * (*self)); } }
     impl Vector4 { pub fn mag(&self)            -> f32 { return f32::sqrt((*self) * (*self)); } }
+    impl Matrix2 { pub fn det(&self)            -> f32 { return 
+        (*self).e[0][0] 
+            * (*self).minor(0, 0) 
+        - (*self).e[1][0] 
+            * (*self).minor(1, 0); } }
+    impl Matrix3 { pub fn det(&self)            -> f32 { return
+        (*self).e[0][0]
+            * (*self).minor(0, 0).det()
+        - (*self).e[0][1]
+            * (*self).minor(0, 1).det()
+        + (*self).e[0][2]
+            * (*self).minor(0, 2).det(); } }
+    impl Matrix4 { pub fn det(&self)            -> f32 { return
+        (*self).e[0][0]
+            * (*self).minor(0, 0).det()
+        - (*self).e[0][1]
+            * (*self).minor(0, 1).det()
+        + (*self).e[0][2]
+            * (*self).minor(0, 2).det()
+        - (*self).e[0][3]
+            * (*self).minor(0, 3).det(); } }
     impl Vector2 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }
     impl Complex { pub fn mag_sqr(&self)        -> f32 { return self.r * self.r + self.i * self.i; } }
     impl Vector3 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }
@@ -1623,6 +1108,7 @@ pub mod linalg {
     impl Vector3 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.mag(); return (*self) * d; } }
     impl Vector4 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.mag(); return (*self) * d; } }
     // /* Consider not using mutating functions */ impl Vector2 { pub fn normalize(&mut self)  { let d = 1.0 / self.mag(); self.x *= d; self.y *= d; } }
+    
     //      Interpolation
     impl Vector2 { pub fn lerp(a: &Self, b: &Self, t: f32)  -> Self { return (*a) + ((*b) - (*a)) * t; } }
     impl Complex { pub fn lerp(a: &Self, b: &Self, t: f32)  -> Self { return (*a) + ((*b) - (*a)) * t; } }
@@ -1632,6 +1118,7 @@ pub mod linalg {
     // impl Vector2 { pub fn slerp(a: &Self, b: &Self, t: f32) -> Self { return; } }
     // impl Vector3 { pub fn slerp(a: &Self, b: &Self, t: f32) -> Self { return; } }
     // impl Vector4 { pub fn slerp(a: &Self, b: &Self, t: f32) -> Self { return; } }
+    
     //      Measurement (angles in radians)
     impl Vector2 { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.mag() * b.mag())); } }
     impl Vector3 { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.mag() * b.mag())); } }

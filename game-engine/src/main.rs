@@ -86,12 +86,29 @@ fn test_array() {
     }
     println!("mat.dia(): {}", mat.dia().to_string());
 
-    let mat4_a = Matrix4::new(
+    let mat2 = Matrix2::new(
+        2.0, 5.0,
+        7.0, 8.0);
+    println!("mat2.triangular_upper(): {}", mat2.triangular_upper().to_string());
+    println!("mat2.det: {}", mat2.det().to_string());
+    println!("mat2.det2: {}", mat2.det2().to_string()); 
+
+    let mat3 = Matrix3::new(
+        3.0, 1.0, 7.0,
+        7.0, -2.0, 11.0,
+        4.0, 5.0, 9.0);
+    println!("mat3.triangular_upper(): {}", mat3.triangular_upper().to_string());
+    println!("mat3.det: {}", mat3.det().to_string());
+    println!("mat3.det2: {}", mat3.det2().to_string());
+
+    let mat4 = Matrix4::new(
         2.0, 4.0, 5.0, 8.0,
         -1.0, 7.0, -2.0, 7.0,
         0.0, 11.0, -1.0, 6.0,
         3.0, -9.0, -3.0, 2.0);
-    println!("mat.triangular_upper(): {}", mat4_a.triangular_upper().to_string());
+    println!("mat4.triangular_upper(): {}", mat4.triangular_upper().to_string());
+    println!("mat4.det: {}", mat4.det().to_string());
+    println!("mat4.det2: {}", mat4.det2().to_string());
 
 }
 

@@ -1141,6 +1141,10 @@ pub mod linalg {
             * (*self).minor(0, 0) 
         - (*self).e[1][0] 
             * (*self).minor(1, 0); } }
+    impl Matrix2 { pub fn det2(&self)           -> f32 { 
+        let dia = self.triangular_lower().dia();
+        return dia.x * dia.y;
+    }}
     impl Matrix3 { pub fn det(&self)            -> f32 { return
         (*self).e[0][0]
             * (*self).minor(0, 0).det()
@@ -1148,6 +1152,9 @@ pub mod linalg {
             * (*self).minor(0, 1).det()
         + (*self).e[0][2]
             * (*self).minor(0, 2).det(); } }
+    impl Matrix3 { pub fn det2(&self)           -> f32 {
+        let dia = self.triangular_lower().dia();
+        return dia.x * dia.y * dia.z; } }
     impl Matrix4 { pub fn det(&self)            -> f32 { return
         (*self).e[0][0]
             * (*self).minor(0, 0).det()
@@ -1157,6 +1164,10 @@ pub mod linalg {
             * (*self).minor(0, 2).det()
         - (*self).e[0][3]
             * (*self).minor(0, 3).det(); } }
+    impl Matrix4 { pub fn det2(&self)           -> f32 {
+        let dia = self.triangular_lower().dia();
+        return dia.x * dia.y * dia.z * dia.w;
+    }}
     impl Vector2 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }
     impl Complex { pub fn mag_sqr(&self)        -> f32 { return self.r * self.r + self.i * self.i; } }
     impl Vector3 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }

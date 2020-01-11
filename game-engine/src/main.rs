@@ -43,7 +43,8 @@ fn main() {
 fn main() {
     // test_vector2();
     // test_math_profiling();
-    test_rendering();
+    // test_rendering();
+    test_array();
 }
 
 fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
@@ -56,6 +57,42 @@ fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
         // }
         _ => {}
     }
+}
+
+fn test_array() {
+    let mut arr = [[0.0; 4]; 4];
+    arr =  [[1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [9.0, 10.0, 11.0, 12.0],
+            [13.0, 14.0, 15.0, 16.0]];
+    
+    for i in 0..4 {
+        println!("row[{}]: [{}, {}, {}, {}]", i, arr[i][0], arr[i][1], arr[i][2], arr[i][3]);
+    }
+
+    use mathematics::linalg::Matrix2;
+    use mathematics::linalg::Matrix3;
+    use mathematics::linalg::Matrix4;
+    let mut mat = Matrix4::new(
+        1.0, 2.0, 3.0, 4.0, 
+        5.0, 6.0, 7.0, 8.0,
+        9.0, 10.0, 11.0, 12.0,
+        13.0, 14.0, 15.0, 16.0);
+    
+    println!("mat: {}", mat.to_string());
+    println!("mat*: {}", (-mat).to_string());
+    for i in 0..4 {
+        println!("mat[{}]: {}", i, mat.col(i).to_string());
+    }
+    println!("mat.dia(): {}", mat.dia().to_string());
+
+    let mat4_a = Matrix4::new(
+        2.0, 4.0, 5.0, 8.0,
+        -1.0, 7.0, -2.0, 7.0,
+        0.0, 11.0, -1.0, 6.0,
+        3.0, -9.0, -3.0, 2.0);
+    println!("mat.triangular_upper(): {}", mat4_a.triangular_upper().to_string());
+
 }
 
 fn test_rendering() {

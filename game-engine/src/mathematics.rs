@@ -120,12 +120,12 @@ pub mod linalg {
     impl Matrix2 { pub fn row(&self, n: usize)          -> Vector2 { return Vector2::new(self.e[n][0], self.e[n][1]); } }
     impl Matrix3 { pub fn row(&self, n: usize)          -> Vector3 { return Vector3::new(self.e[n][0], self.e[n][1], self.e[n][2]); } }
     impl Matrix4 { pub fn row(&self, n: usize)          -> Vector4 { return Vector4::new(self.e[n][0], self.e[n][1], self.e[n][2], self.e[n][3]); } }
-    impl Matrix2 { pub fn col(&self, n: usize)          -> Vector2 { return Vector2::new(self.e[0][n], self.e[1][n]); } }
-    impl Matrix3 { pub fn col(&self, n: usize)          -> Vector3 { return Vector3::new(self.e[0][n], self.e[1][n], self.e[2][n]); } }
-    impl Matrix4 { pub fn col(&self, n: usize)          -> Vector4 { return Vector4::new(self.e[0][n], self.e[1][n], self.e[2][n], self.e[3][n]); } }
-    impl Matrix2 { pub fn dia(&self)                    -> Vector2 { return Vector2::new(self.e[0][0], self.e[1][1]); } }
-    impl Matrix3 { pub fn dia(&self)                    -> Vector3 { return Vector3::new(self.e[0][0], self.e[1][1], self.e[2][2]); } }
-    impl Matrix4 { pub fn dia(&self)                    -> Vector4 { return Vector4::new(self.e[0][0], self.e[1][1], self.e[2][2], self.e[3][3]); } }
+    impl Matrix2 { pub fn column(&self, n: usize)       -> Vector2 { return Vector2::new(self.e[0][n], self.e[1][n]); } }
+    impl Matrix3 { pub fn column(&self, n: usize)       -> Vector3 { return Vector3::new(self.e[0][n], self.e[1][n], self.e[2][n]); } }
+    impl Matrix4 { pub fn column(&self, n: usize)       -> Vector4 { return Vector4::new(self.e[0][n], self.e[1][n], self.e[2][n], self.e[3][n]); } }
+    impl Matrix2 { pub fn diagonal(&self)               -> Vector2 { return Vector2::new(self.e[0][0], self.e[1][1]); } }
+    impl Matrix3 { pub fn diagonal(&self)               -> Vector3 { return Vector3::new(self.e[0][0], self.e[1][1], self.e[2][2]); } }
+    impl Matrix4 { pub fn diagonal(&self)               -> Vector4 { return Vector4::new(self.e[0][0], self.e[1][1], self.e[2][2], self.e[3][3]); } }
     
     // Construction
     impl Vector2    { pub fn new(a: f32, b: f32)                        -> Self { return Self { x: a, y: b }; } }
@@ -160,7 +160,7 @@ pub mod linalg {
                                     [b, f, j, n],
                                     [c, g, k, o],
                                     [d, h, l, p]] } } }
-    impl Matrix4 { pub fn from_vector4(a: Vector4, b: Vector4, c: Vector4, d: Vector4) -> Self {
+    impl Matrix4    { pub fn from_vector4(a: Vector4, b: Vector4, c: Vector4, d: Vector4) -> Self {
         return Self::new(a.x, a.y, a.z, a.w, b.x, b.y, b.z, b.w, c.x, c.y, c.z, c.w, d.x, d.y, d.z, d.w); } }
 
     // impl Quaternion {
@@ -171,7 +171,7 @@ pub mod linalg {
     // }
     
     //      Transformation Constructors
-    impl Complex { pub fn from_rotor(angle: f32)                        -> Self { return Self::new(f32::cos(angle), f32::sin(angle)); } }
+    impl Complex    { pub fn from_rotor(angle: f32)                     -> Self { return Self::new(f32::cos(angle), f32::sin(angle)); } }
 
     // Conversion Methods
     impl Vector2    { pub fn from_vector2(v: &Vector2)                  -> Self { return Self::new(v.x, v.y); } }
@@ -201,32 +201,29 @@ pub mod linalg {
     impl Vector4    { pub fn from_vector4(v: &Vector4)                  -> Self { return Self::new(v.x, v.y, v.z, v.w); } }
     //      https://stackoverflow.com/questions/36138768/finding-minor-matrices-of-3x3-matrix-c
     
+    // Transpose (also implemented for unary operator [-])
+    impl Matrix2    { pub fn transpose(&self)                           -> Self {
+        return Self::new(
+            self.e[0][0],   self.e[0][1],
+            self.e[1][0],   self.e[1][1]); } }
+    impl Matrix3    { pub fn transpose(&self)                           -> Self {
+        return Self::new(
+            self.e[0][0],   self.e[0][1],   self.e[0][2],
+            self.e[1][0],   self.e[1][1],   self.e[1][2],
+            self.e[2][0],   self.e[2][1],   self.e[2][2]); } }
+    impl Matrix4    { pub fn transpose(&self)                           -> Self {
+        return Self::new(
+            self.e[0][0],   self.e[0][1],   self.e[0][2],   self.e[0][3],
+            self.e[1][0],   self.e[1][1],   self.e[1][2],   self.e[1][3],
+            self.e[2][0],   self.e[2][1],   self.e[2][2],   self.e[2][3],
+            self.e[3][0],   self.e[3][1],   self.e[3][2],   self.e[3][3]); } }
     // Matrix minor
     impl Matrix2    { pub fn minor(&self, i: usize, j: usize)           -> f32 { return self.e[1 - i][1 - j]; } }
     impl Matrix3    { pub fn minor(&self, i: usize, j: usize)           -> Matrix2 {
         let mut M = Matrix2::zero();
         let mut row = 0;
         let mut col = 0;
-        for a in 0..2 {
-            row = a;
-            if i < a {
-                row = row - 1;
-            } 
-            for b in 0..2 {
-                col = b;
-                if j < b {
-                    col = col - 1;
-                }
-                if a != i && b != j {
-                    M.e[row][col] = self.e[a][b];
-                }
-            }
-        }
-        return M; } }
-    impl Matrix4    { pub fn minor(&self, i: usize, j: usize)           -> Matrix3 {
-        let mut M = Matrix3::zero();
-        let mut row = 0;
-        let mut col = 0;
+
         for a in 0..3 {
             row = a;
             if i < a {
@@ -242,32 +239,117 @@ pub mod linalg {
                 }
             }
         }
-        return M; } } 
+        return M; } }
+    impl Matrix4    { pub fn minor(&self, i: usize, j: usize)           -> Matrix3 {
+        let mut M = Matrix3::zero();
+        let mut row = 0;
+        let mut col = 0;
+
+        for a in 0..4 {
+            row = a;
+            if i < a {
+                row = row - 1;
+            } 
+            for b in 0..4 {
+                col = b;
+                if j < b {
+                    col = col - 1;
+                }
+                if a != i && b != j {
+                    M.e[row][col] = self.e[a][b];
+                }
+            }
+        }
+        return M; } }
+
+    
+    // Cofactors
+    impl Matrix2    { pub fn cofactor(&self, i: usize, j: usize)        -> f32 {
+        return self.minor(i, j) * f32::signum((((i % 2) as f32) - 0.5) * (((j % 2) as f32) - 0.5)); } }
+    impl Matrix3    { pub fn cofactor(&self, i: usize, j: usize)        -> f32 {
+        return self.minor(i, j).determinant() * f32::signum((((i % 2) as f32) - 0.5) * (((j % 2) as f32) - 0.5)); } }
+    impl Matrix4    { pub fn cofactor(&self, i: usize, j: usize)        -> f32 {
+        return self.minor(i, j).determinant() * f32::signum((((i % 2) as f32) - 0.5) * (((j % 2) as f32) - 0.5)); } }
 
     // Cofactor matrix
+    impl Matrix2    { pub fn cofactor_matrix(&self)                     -> Self {
+        let mut c = Vec::new();
+        for i in 0..2 {
+            for j in 0..2 {
+                c.push(self.cofactor(j, i));
+            }
+        }
+        return Matrix2::new(
+            c[0],   c[1],
+            c[2],   c[3]); } }
+    impl Matrix3    { pub fn cofactor_matrix(&self)                     -> Self {
+        let mut c = Vec::new();
+        for i in 0..3 {
+            for j in 0..3 {
+                c.push(self.cofactor(j, i));
+            }
+        }
+        return Matrix3::new(
+            c[0],   c[1],   c[2],
+            c[3],   c[4],   c[5],
+            c[6],   c[7],   c[8]); } }
+    impl Matrix4    { pub fn cofactor_matrix(&self)                     -> Self {
+        let mut c = Vec::new();
+        for i in 0..4 {
+            for j in 0..4 {
+                c.push(self.cofactor(j, i));
+            }
+        }
+        return Matrix4::new(
+            c[0],   c[1],   c[2],   c[3],
+            c[4],   c[5],   c[6],   c[7],
+            c[8],   c[9],   c[10],  c[11],
+            c[12],  c[13],  c[14],  c[15]); } }
 
     // Matrix adjugate
+    impl Matrix2    { pub fn adjugate(&self)                            -> Self {
+        return self.cofactor_matrix().transpose(); } }
+    impl Matrix3    { pub fn adjugate(&self)                            -> Self {
+        return self.cofactor_matrix().transpose(); } }
+    impl Matrix4    { pub fn adjugate(&self)                            -> Self {
+        return self.cofactor_matrix().transpose(); } }
+    // Inverse (also implemented for unary operator [!])
+    impl Matrix2    { pub fn inverse(&self)                             -> Self {
+        if self.determinant() == 0.0 {
+            return Self::zero();
+        } else {
+            return self.adjugate() / self.determinant(); } } }
+    impl Matrix3    { pub fn inverse(&self)                             -> Self {
+        if self.determinant() == 0.0 {
+            return Self::zero();
+        } else {
+            return self.adjugate() / self.determinant(); } } }
+    impl Matrix4    { pub fn inverse(&self)                             -> Self {
+        if self.determinant() == 0.0 {
+            return Self::zero();
+        } else {
+            return self.adjugate() / self.determinant(); } } }
 
     // Matrix triangulation
     impl Matrix2    { pub fn triangular_lower(&self)                    -> Self {
-        let col0 = self.col(0);
-        let col1 = self.col(1);
+        let col0 = self.column(0);
+        let col1 = self.column(1);
 
         return Matrix2::from_vector2(col0, col1 - (col1.x / col0.x) * col0); } }
     impl Matrix3    { pub fn triangular_lower(&self)                    -> Self {
-        let col0 = self.col(0);
-        let col1 = self.col(1);
-        let col2 = self.col(2);
+        let col0 = self.column(0);
+        let col1 = self.column(1);
+        let col2 = self.column(2);
         let col1_a = col1 - col0 * (col1.x / col0.x);
         let col2_a = col2 - col0 * (col2.x / col0.x);
         let col2_b = col2_a - col1_a * (col2_a.y / col1_a.y);
 
         return Matrix3::from_vector3(col0, col1_a, col2_b); } }
     impl Matrix4    { pub fn triangular_lower(&self)                    -> Self {
-        let col0 = self.col(0);
-        let col1 = self.col(1);
-        let col2 = self.col(2);
-        let col3 = self.col(3);
+        let col0 = self.column(0);
+        let col1 = self.column(1);
+        let col2 = self.column(2);
+        let col3 = self.column(3);
         let col1_a = col1 - col0 * (col1.x / col0.x);
         let col2_a = col2 - col0 * (col2.x / col0.x);
         let col3_a = col3 - col0 * (col3.x / col0.x);
@@ -277,24 +359,24 @@ pub mod linalg {
 
         return Matrix4::from_vector4(col0, col1_a, col2_b, col3_c); } }
     impl Matrix2    { pub fn triangular_upper(&self)                    -> Self {
-        let col0 = self.col(0);
-        let col1 = self.col(1);
+        let col0 = self.column(0);
+        let col1 = self.column(1);
 
         return Matrix2::from_vector2(col0 - col1 * (col0.y / col1.y), col1); } }
     impl Matrix3    { pub fn triangular_upper(&self)                    -> Self {
-        let col0 = self.col(0);
-        let col1 = self.col(1);
-        let col2 = self.col(2);
+        let col0 = self.column(0);
+        let col1 = self.column(1);
+        let col2 = self.column(2);
         let col0_a = col0 - col2 * (col0.z / col2.z);
         let col1_a = col1 - col2 * (col1.z / col2.z);
         let col0_b = col0_a - col1_a * (col0_a.y / col1_a.y);
 
         return Matrix3::from_vector3(col0_b, col1_a, col2); } }
     impl Matrix4    { pub fn triangular_upper(&self)                    -> Self {
-        let col0 = self.col(0);
-        let col1 = self.col(1);
-        let col2 = self.col(2);
-        let col3 = self.col(3);
+        let col0 = self.column(0);
+        let col1 = self.column(1);
+        let col2 = self.column(2);
+        let col3 = self.column(3);
         let col0_a = col0 - col3 * (col0.w / col3.w); 
         let col1_a = col1 - col3 * (col1.w / col3.w); 
         let col2_a = col2 - col3 * (col2.w / col3.w); 
@@ -302,8 +384,7 @@ pub mod linalg {
         let col1_b = col1_a - col2_a * (col1_a.z / col2_a.z);
         let col0_c = col0_b - col1_b * (col0_b.y / col1_b.y);
 
-        return Matrix4::from_vector4(col0_c, col1_b, col2_a, col3);
-    }}
+        return Matrix4::from_vector4(col0_c, col1_b, col2_a, col3); } }
 
     // Prefabrication
     impl Vector2 { pub fn one()         -> Self { return Self::new(1.0, 1.0); } }
@@ -749,28 +830,28 @@ pub mod linalg {
 
     // Utilities
     //      (Also implement to_latex)
-    impl Vector2 { pub fn to_string(&self)      -> String {
+    impl Vector2    { pub fn to_string(&self)   -> String {
         return format!("[{}, {}]", self.x, self.y); } }
-    impl Complex { pub fn to_string(&self)      -> String {
+    impl Complex    { pub fn to_string(&self)   -> String {
         return format!("[{} + {}i]", self.r, self.i); } }
-    impl Dual { pub fn to_string(&self)         -> String {
+    impl Dual       { pub fn to_string(&self)   -> String {
         return format!("[{} + {}ε]", self.r, self.e); } }
-    impl Vector3 { pub fn to_string(&self)      -> String {
+    impl Vector3    { pub fn to_string(&self)   -> String {
         return format!("[{}, {}, {}]", self.x, self.y, self.z); } }
-    impl Vector4 { pub fn to_string(&self)      -> String {
+    impl Vector4    { pub fn to_string(&self)   -> String {
         return format!("[{}, {}, {}, {}]", self.x, self.y, self.z, self.w); } }
     // impl Quaternion { /* Unfinished */ }
     // impl QuaternionDual { /* Unfinished */ }
-    impl Matrix2 { pub fn to_string(&self)      -> String {
+    impl Matrix2    { pub fn to_string(&self)   -> String {
         return format!("[[{}, {}], [{}, {}]]", 
             self.e[0][0], self.e[0][1], 
             self.e[1][0], self.e[1][1]); } }
-    impl Matrix3 { pub fn to_string(&self)      -> String {
+    impl Matrix3    { pub fn to_string(&self)   -> String {
         return format!("[[{}, {}, {}], [{}, {}, {}], [{}, {}, {}]]", 
             self.e[0][0], self.e[0][1], self.e[0][2], 
             self.e[1][0], self.e[1][1], self.e[1][2],
             self.e[2][0], self.e[2][1], self.e[2][2]); } }
-    impl Matrix4 { pub fn to_string(&self)      -> String {
+    impl Matrix4    { pub fn to_string(&self)   -> String {
         return format!("[[{}, {}, {}, {}], [{}, {}, {}, {}], [{}, {}, {}, {}], [{}, {}, {}, {}]]", 
             self.e[0][0], self.e[0][1], self.e[0][2], self.e[0][3],
             self.e[1][0], self.e[1][1], self.e[1][2], self.e[1][3],
@@ -896,23 +977,14 @@ pub mod linalg {
         return Self::new(self.r, -self.e); } }
     //          Transpose
     impl Neg for Matrix2 { type Output = Self; fn neg(self) -> Self {
-        return Self::new(
-            self.e[0][0],   self.e[0][1],
-            self.e[1][0],   self.e[1][1]); } }
+        return self.transpose(); } }
     impl Neg for Matrix3 { type Output = Self; fn neg(self) -> Self {
-        return Self::new(
-            self.e[0][0],   self.e[0][1],   self.e[0][2],
-            self.e[1][0],   self.e[1][1],   self.e[1][2],
-            self.e[2][0],   self.e[2][1],   self.e[2][2]); } }
+        return self.transpose(); } }
     impl Neg for Matrix4 { type Output = Self; fn neg(self) -> Self {
-        return Self::new(
-            self.e[0][0],   self.e[0][1],   self.e[0][2],   self.e[0][3],
-            self.e[1][0],   self.e[1][1],   self.e[1][2],   self.e[1][3],
-            self.e[2][0],   self.e[2][1],   self.e[2][2],   self.e[2][3],
-            self.e[3][0],   self.e[3][1],   self.e[3][2],   self.e[3][3]); } }
+        return self.transpose(); } }
     //          Inverse
     impl Not for Complex { type Output = Self; fn not(self) -> Self {
-        let d = 1.0 / self.mag_sqr();
+        let d = 1.0 / self.magnitude_sqr();
         return (-self) * d; } }
     // impl Not for Matrix2 { type Output = Self; fn not(self) -> Self {
 
@@ -1117,6 +1189,10 @@ pub mod linalg {
         let t = 1.0 / s; return self * t; } }
     impl Div<f32> for Matrix2 { type Output = Self; fn div(self, s: f32) -> Self { 
         let t = 1.0 / s; return self * t; } }
+    impl Div<f32> for Matrix3 { type Output = Self; fn div(self, s: f32) -> Self { 
+        let t = 1.0 / s; return self * t; } }
+    impl Div<f32> for Matrix4 { type Output = Self; fn div(self, s: f32) -> Self { 
+        let t = 1.0 / s; return self * t; } }
     impl DivAssign<f32> for Vector2 { fn div_assign(&mut self, s: f32) { 
         let t = 1.0 / s; self.x *= t; self.y *= t; } }
     impl DivAssign<f32> for Complex { fn div_assign(&mut self, s: f32) { 
@@ -1132,94 +1208,92 @@ pub mod linalg {
     // Inter-Struct Product: { Matrix-Vector }
     // Geometry
     //      Magnitude
-    impl Vector2 { pub fn mag(&self)            -> f32 { return f32::sqrt((*self) * (*self)); } }
-    impl Complex { pub fn mag(&self)            -> f32 { return f32::sqrt(self.r * self.r + self.i * self.i); } }
-    impl Vector3 { pub fn mag(&self)            -> f32 { return f32::sqrt((*self) * (*self)); } }
-    impl Vector4 { pub fn mag(&self)            -> f32 { return f32::sqrt((*self) * (*self)); } }
-    impl Matrix2 { pub fn det(&self)            -> f32 { return 
+    impl Vector2 { pub fn magnitude(&self)      -> f32 { return f32::sqrt((*self) * (*self)); } }
+    impl Complex { pub fn magnitude(&self)      -> f32 { return f32::sqrt(self.r * self.r + self.i * self.i); } }
+    impl Vector3 { pub fn magnitude(&self)      -> f32 { return f32::sqrt((*self) * (*self)); } }
+    impl Vector4 { pub fn magnitude(&self)      -> f32 { return f32::sqrt((*self) * (*self)); } }
+    impl Matrix2 { pub fn determinant(&self)    -> f32 { return 
         (*self).e[0][0] 
             * (*self).minor(0, 0) 
         - (*self).e[1][0] 
             * (*self).minor(1, 0); } }
-    impl Matrix2 { pub fn det2(&self)           -> f32 { 
-        let dia = self.triangular_lower().dia();
-        return dia.x * dia.y;
-    }}
-    impl Matrix3 { pub fn det(&self)            -> f32 { return
+    impl Matrix2 { pub fn determinant2(&self)   -> f32 { 
+        let dia = self.triangular_lower().diagonal();
+        return dia.x * dia.y; } }
+    impl Matrix3 { pub fn determinant(&self)    -> f32 { return
         (*self).e[0][0]
-            * (*self).minor(0, 0).det()
+            * (*self).minor(0, 0).determinant()
         - (*self).e[0][1]
-            * (*self).minor(0, 1).det()
+            * (*self).minor(0, 1).determinant()
         + (*self).e[0][2]
-            * (*self).minor(0, 2).det(); } }
-    impl Matrix3 { pub fn det2(&self)           -> f32 {
-        let dia = self.triangular_lower().dia();
+            * (*self).minor(0, 2).determinant(); } }
+    impl Matrix3 { pub fn determinant2(&self)   -> f32 {
+        let dia = self.triangular_lower().diagonal();
         return dia.x * dia.y * dia.z; } }
-    impl Matrix4 { pub fn det(&self)            -> f32 { return
+    impl Matrix4 { pub fn determinant(&self)    -> f32 { return
         (*self).e[0][0]
-            * (*self).minor(0, 0).det()
+            * (*self).minor(0, 0).determinant()
         - (*self).e[0][1]
-            * (*self).minor(0, 1).det()
+            * (*self).minor(0, 1).determinant()
         + (*self).e[0][2]
-            * (*self).minor(0, 2).det()
+            * (*self).minor(0, 2).determinant()
         - (*self).e[0][3]
-            * (*self).minor(0, 3).det(); } }
-    impl Matrix4 { pub fn det2(&self)           -> f32 {
-        let dia = self.triangular_lower().dia();
-        return dia.x * dia.y * dia.z * dia.w;
-    }}
-    impl Vector2 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }
-    impl Complex { pub fn mag_sqr(&self)        -> f32 { return self.r * self.r + self.i * self.i; } }
-    impl Vector3 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }
-    impl Vector4 { pub fn mag_sqr(&self)        -> f32 { return (*self) * (*self); } }
-    impl Vector2 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.mag(); return (*self) * d; } }
-    impl Vector3 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.mag(); return (*self) * d; } }
-    impl Vector4 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.mag(); return (*self) * d; } }
+            * (*self).minor(0, 3).determinant(); } }
+    impl Matrix4 { pub fn determinant2(&self)   -> f32 {
+        let dia = self.triangular_lower().diagonal();
+        return dia.x * dia.y * dia.z * dia.w; } }
+    impl Vector2 { pub fn magnitude_sqr(&self)  -> f32 { return (*self) * (*self); } }
+    impl Complex { pub fn magnitude_sqr(&self)  -> f32 { return self.r * self.r + self.i * self.i; } }
+    impl Vector3 { pub fn magnitude_sqr(&self)  -> f32 { return (*self) * (*self); } }
+    impl Vector4 { pub fn magnitude_sqr(&self)  -> f32 { return (*self) * (*self); } }
+    impl Vector2 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.magnitude(); return (*self) * d; } }
+    impl Vector3 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.magnitude(); return (*self) * d; } }
+    impl Vector4 { pub fn normalization(&self)  -> Self { let d = 1.0 / self.magnitude(); return (*self) * d; } }
     // /* Consider not using mutating functions */ impl Vector2 { pub fn normalize(&mut self)  { let d = 1.0 / self.mag(); self.x *= d; self.y *= d; } }
     
     //      Interpolation
-    impl Vector2 { pub fn lerp(a: &Self, b: &Self, t: f32)  -> Self { return (*a) + ((*b) - (*a)) * t; } }
-    impl Complex { pub fn lerp(a: &Self, b: &Self, t: f32)  -> Self { return (*a) + ((*b) - (*a)) * t; } }
-    impl Dual { pub fn lerp(a: &Self, b: &Self, t: f32)     -> Self { return (*a) + ((*b) - (*a)) * t; } }
-    impl Vector3 { pub fn lerp(a: &Self, b: &Self, t: f32)  -> Self { return (*a) + ((*b) - (*a)) * t; } }
-    impl Vector4 { pub fn lerp(a: &Self, b: &Self, t: f32)  -> Self { return (*a) + ((*b) - (*a)) * t; } }
+    impl Vector2    { pub fn lerp(a: &Self, b: &Self, t: f32)   -> Self { return (*a) + ((*b) - (*a)) * t; } }
+    impl Complex    { pub fn lerp(a: &Self, b: &Self, t: f32)   -> Self { return (*a) + ((*b) - (*a)) * t; } }
+    impl Dual       { pub fn lerp(a: &Self, b: &Self, t: f32)   -> Self { return (*a) + ((*b) - (*a)) * t; } }
+    impl Vector3    { pub fn lerp(a: &Self, b: &Self, t: f32)   -> Self { return (*a) + ((*b) - (*a)) * t; } }
+    impl Vector4    { pub fn lerp(a: &Self, b: &Self, t: f32)   -> Self { return (*a) + ((*b) - (*a)) * t; } }
     // impl Vector2 { pub fn slerp(a: &Self, b: &Self, t: f32) -> Self { return; } }
     // impl Vector3 { pub fn slerp(a: &Self, b: &Self, t: f32) -> Self { return; } }
     // impl Vector4 { pub fn slerp(a: &Self, b: &Self, t: f32) -> Self { return; } }
     
     //      Measurement (angles in radians)
-    impl Vector2 { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.mag() * b.mag())); } }
-    impl Vector3 { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.mag() * b.mag())); } }
-    impl Vector4 { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.mag() * b.mag())); } }
-    impl Vector2 { pub fn angle_safe(a: &Self, b: &Self)    -> f32 {
-        let d = a.mag() * b.mag();
+    impl Vector2    { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.magnitude() * b.magnitude())); } }
+    impl Vector3    { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.magnitude() * b.magnitude())); } }
+    impl Vector4    { pub fn angle(a: &Self, b: &Self)         -> f32 { return f32::acos(((*a) * (*b)) / (a.magnitude() * b.magnitude())); } }
+    impl Vector2    { pub fn angle_safe(a: &Self, b: &Self)    -> f32 {
+        let d = a.magnitude() * b.magnitude();
         if d <= f32::EPSILON {
             return f32::NAN;
         } else {
             return Self::angle(&a, &b);
         }
     } }
-    impl Vector3 { pub fn angle_safe(a: &Self, b: &Self)    -> f32 {
-        let d = a.mag() * b.mag();
+    impl Vector3    { pub fn angle_safe(a: &Self, b: &Self)    -> f32 {
+        let d = a.magnitude() * b.magnitude();
         if d <= f32::EPSILON {
             return f32::NAN;
         } else {
             return Self::angle(&a, &b);
         }
     } }
-    impl Vector4 { pub fn angle_safe(a: &Self, b: &Self)    -> f32 {
-        let d = a.mag() * b.mag();
+    impl Vector4    { pub fn angle_safe(a: &Self, b: &Self)    -> f32 {
+        let d = a.magnitude() * b.magnitude();
         if d <= f32::EPSILON {
             return f32::NAN;
         } else {
             return Self::angle(&a, &b);
         }
     } }
-    impl Vector2 { pub fn angle_unit(a: &Self, b: &Self)    -> f32 { return f32::acos((*a) * (*b)); } }
-    impl Vector3 { pub fn angle_unit(a: &Self, b: &Self)    -> f32 { return f32::acos((*a) * (*b)); } }
-    impl Vector4 { pub fn angle_unit(a: &Self, b: &Self)    -> f32 { return f32::acos((*a) * (*b)); } }
+    impl Vector2    { pub fn angle_unit(a: &Self, b: &Self)    -> f32 { return f32::acos((*a) * (*b)); } }
+    impl Vector3    { pub fn angle_unit(a: &Self, b: &Self)    -> f32 { return f32::acos((*a) * (*b)); } }
+    impl Vector4    { pub fn angle_unit(a: &Self, b: &Self)    -> f32 { return f32::acos((*a) * (*b)); } }
     // Taken from https://stackoverflow.com/questions/14066933/direct-way-of-computing-clockwise-angle-between-2-vectors
-    impl Vector2 { pub fn angle_signed(a: &Self, b: &Self)  -> f32 {
+    impl Vector2    { pub fn angle_signed(a: &Self, b: &Self)  -> f32 {
         let dot = (*a) * (*b);
         let det = (*a) / (*b);
         let mut angle = f32::atan2(det, dot);
@@ -1254,7 +1328,7 @@ pub mod linalg {
     impl Vector4 { pub fn reflection_unit(a: &Self, b: &Self)   -> Self { return (*a) - 2.0 * Self::projection_unit(a, b); } }
     //      Vector Refraction
     impl Vector2 { pub fn refraction(a: &Self, b: &Self, n1: f32, n2: f32)      -> Self {
-        let mag = a.mag();
+        let mag = a.magnitude();
         let n = n1 / n2;
         let t1 = Self::angle(&(-(*a)), b);
         let mut signum = f32::cos(Self::angle(a, &Self::right()));

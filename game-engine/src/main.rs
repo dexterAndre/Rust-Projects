@@ -82,34 +82,67 @@ fn test_array() {
     println!("mat: {}", mat.to_string());
     println!("mat*: {}", (-mat).to_string());
     for i in 0..4 {
-        println!("mat[{}]: {}", i, mat.col(i).to_string());
+        println!("mat[{}]: {}", i, mat.column(i).to_string());
     }
-    println!("mat.dia(): {}", mat.dia().to_string());
+    println!("mat.dia(): {}", mat.diagonal().to_string());
 
     let mat2 = Matrix2::new(
         2.0, 5.0,
         7.0, 8.0);
     println!("mat2.triangular_upper(): {}", mat2.triangular_upper().to_string());
-    println!("mat2.det: {}", mat2.det().to_string());
-    println!("mat2.det2: {}", mat2.det2().to_string()); 
+    println!("mat2.det: {}", mat2.determinant().to_string());
+    println!("mat2.det2: {}", mat2.determinant2().to_string()); 
 
     let mat3 = Matrix3::new(
-        3.0, 1.0, 7.0,
-        7.0, -2.0, 11.0,
-        4.0, 5.0, 9.0);
+        1.0, 2.0, -6.0,
+        -3.0, 4.0, -1.0,
+        0.0, -5.0, 7.0);
+    println!("mat3: {}", mat3.to_string()); 
     println!("mat3.triangular_upper(): {}", mat3.triangular_upper().to_string());
-    println!("mat3.det: {}", mat3.det().to_string());
-    println!("mat3.det2: {}", mat3.det2().to_string());
+    println!("mat3.det: {}", mat3.determinant().to_string());
+    println!("mat3.det2: {}", mat3.determinant2().to_string());
+
+    println!("mat3.minor(0, 0): {}", mat3.minor(0, 0).to_string());
+    println!("mat3.minor(0, 0).det(): {}", mat3.minor(0, 0).determinant().to_string());
+    println!("mat3.cofactor(0, 0): {}", mat3.cofactor(0, 0).to_string());
+    println!("mat3.minor(0, 1): {}", mat3.minor(0, 1).to_string());
+    println!("mat3.minor(0, 1).det(): {}", mat3.minor(0, 1).determinant().to_string());
+    println!("mat3.cofactor(0, 1): {}", mat3.cofactor(0, 1).to_string());
+    println!("mat3.minor(0, 2): {}", mat3.minor(0, 2).to_string());
+    println!("mat3.minor(0, 2).det(): {}", mat3.minor(0, 2).determinant().to_string());
+    println!("mat3.cofactor(0, 2): {}", mat3.cofactor(0, 2).to_string());
+    
+    println!("mat3.minor(1, 0): {}", mat3.minor(1, 0).to_string());
+    println!("mat3.minor(1, 0).det(): {}", mat3.minor(1, 0).determinant().to_string());
+    println!("mat3.cofactor(1, 0): {}", mat3.cofactor(1, 0).to_string());
+    println!("mat3.minor(1, 1): {}", mat3.minor(1, 1).to_string());
+    println!("mat3.minor(1, 1).det(): {}", mat3.minor(1, 1).determinant().to_string());
+    println!("mat3.cofactor(1, 1): {}", mat3.cofactor(1, 1).to_string());
+    println!("mat3.minor(1, 2): {}", mat3.minor(1, 2).to_string());
+    println!("mat3.minor(1, 2).det(): {}", mat3.minor(1, 2).determinant().to_string());
+    println!("mat3.cofactor(1, 2): {}", mat3.cofactor(1, 2).to_string());
+    
+    println!("mat3.minor(2, 0): {}", mat3.minor(2, 0).to_string());
+    println!("mat3.minor(2, 0).det(): {}", mat3.minor(2, 0).determinant().to_string());
+    println!("mat3.cofactor(2, 0): {}", mat3.cofactor(2, 0).to_string());
+    println!("mat3.minor(2, 1): {}", mat3.minor(2, 1).to_string());
+    println!("mat3.minor(2, 1).det(): {}", mat3.minor(2, 1).determinant().to_string());
+    println!("mat3.cofactor(2, 1): {}", mat3.cofactor(2, 1).to_string());
+    println!("mat3.minor(2, 2): {}", mat3.minor(2, 2).to_string());
+    println!("mat3.minor(2, 2).det(): {}", mat3.minor(2, 2).determinant().to_string());
+    println!("mat3.cofactor(2, 2): {}", mat3.cofactor(2, 2).to_string());
+
+    println!("mat3.cofactor_matrix: {}", mat3.cofactor_matrix().to_string());
 
     let mat4 = Matrix4::new(
         2.0, 4.0, 5.0, 8.0,
         -1.0, 7.0, -2.0, 7.0,
         0.0, 11.0, -1.0, 6.0,
         3.0, -9.0, -3.0, 2.0);
+    println!("mat4: {}", mat4.to_string());
     println!("mat4.triangular_upper(): {}", mat4.triangular_upper().to_string());
-    println!("mat4.det: {}", mat4.det().to_string());
-    println!("mat4.det2: {}", mat4.det2().to_string());
-
+    println!("mat4.det: {}", mat4.determinant().to_string());
+    println!("mat4.det2: {}", mat4.determinant2().to_string());
 }
 
 fn test_rendering() {
@@ -364,33 +397,33 @@ fn test_vector2() {
     println!("===== PREFABRICATION =====");
     //      Mutable for later usage
     let mut e = Vector2::one();
-    println!("e = Vector2::one() -> {}, mag: {}", e.to_string(), e.mag());
+    println!("e = Vector2::one() -> {}, mag: {}", e.to_string(), e.magnitude());
     let f = Vector2::zero();
-    println!("f = Vector2::zero() -> {}, mag: {}", f.to_string(), f.mag());
+    println!("f = Vector2::zero() -> {}, mag: {}", f.to_string(), f.magnitude());
     let g = Vector2::right();
-    println!("g = Vector2::right() -> {}, mag: {}", g.to_string(), g.mag());
+    println!("g = Vector2::right() -> {}, mag: {}", g.to_string(), g.magnitude());
     let h = Vector2::left();
-    println!("h = Vector2::left() -> {}, mag: {}", h.to_string(), h.mag());
+    println!("h = Vector2::left() -> {}, mag: {}", h.to_string(), h.magnitude());
     let i = Vector2::forth();
-    println!("i = Vector2::forth() -> {}, mag: {}", i.to_string(), i.mag());
+    println!("i = Vector2::forth() -> {}, mag: {}", i.to_string(), i.magnitude());
     let j = Vector2::back();
-    println!("j = Vector2::back() -> {}, mag: {}", j.to_string(), j.mag());
+    println!("j = Vector2::back() -> {}, mag: {}", j.to_string(), j.magnitude());
     let k = Vector2::Q1();
-    println!("k = Vector2::Q1() -> {}, mag: {}", k.to_string(), k.mag());
+    println!("k = Vector2::Q1() -> {}, mag: {}", k.to_string(), k.magnitude());
     let l = Vector2::Q1n();
-    println!("l = Vector2::Q1n() -> {}, mag: {}", l.to_string(), l.mag());
+    println!("l = Vector2::Q1n() -> {}, mag: {}", l.to_string(), l.magnitude());
     let m = Vector2::Q2();
-    println!("m = Vector2::Q2() -> {}, mag: {}", m.to_string(), m.mag());
+    println!("m = Vector2::Q2() -> {}, mag: {}", m.to_string(), m.magnitude());
     let n = Vector2::Q2n();
-    println!("n = Vector2::Q2n() -> {}, mag: {}", n.to_string(), n.mag());
+    println!("n = Vector2::Q2n() -> {}, mag: {}", n.to_string(), n.magnitude());
     let o = Vector2::Q3();
-    println!("o = Vector2::Q3() -> {}, mag: {}", o.to_string(), o.mag());
+    println!("o = Vector2::Q3() -> {}, mag: {}", o.to_string(), o.magnitude());
     let p = Vector2::Q3n();
-    println!("p = Vector2::Q3n() -> {}, mag: {}", p.to_string(), p.mag());
+    println!("p = Vector2::Q3n() -> {}, mag: {}", p.to_string(), p.magnitude());
     let q = Vector2::Q4();
-    println!("q = Vector2::Q4() -> {}, mag: {}", q.to_string(), q.mag());
+    println!("q = Vector2::Q4() -> {}, mag: {}", q.to_string(), q.magnitude());
     let r = Vector2::Q4n();
-    println!("r = Vector2::Q4n() -> {}, mag: {}", r.to_string(), r.mag());
+    println!("r = Vector2::Q4n() -> {}, mag: {}", r.to_string(), r.magnitude());
     
     // Swizzling
     println!("===== SWIZZLING =====");
@@ -474,8 +507,8 @@ fn test_vector2() {
     
     println!("=== MAGNITUDE ===");
     println!("a = {}", (a).to_string());
-    println!("a.mag(): {}", a.mag());
-    println!("a.mag_sqr(): {}", a.mag_sqr());
+    println!("a.mag(): {}", a.magnitude());
+    println!("a.mag_sqr(): {}", a.magnitude_sqr());
     println!("a.normalization(): {}", a.normalization().to_string());
     println!("a = {}", (a).to_string());
     // a.normalize();

@@ -43,8 +43,8 @@ fn main() {
 fn main() {
     // test_vector2();
     // test_math_profiling();
-    // test_rendering();
-    test_array();
+    test_rendering();
+    // test_array();
 }
 
 fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
@@ -314,6 +314,27 @@ fn test_rendering() {
         
         // Drawing geometry
         shader_program.set_used();
+
+        // Transformations
+        use mathematics::num;
+        use mathematics::linalg::Matrix4;
+        let transform: *const Matrix4 = &Matrix4::new(
+            f32::cos(30.0 * num::constants::DEG2RAD),   -f32::sin(30.0 * num::constants::DEG2RAD),  0.0,    0.0,
+            f32::sin(30.0 * num::constants::DEG2RAD),   f32::cos(30.0 * num::constants::DEG2RAD),   0.0,    0.0,
+            0.0,                                        0.0,                                        1.0,    0.0,
+            0.0,                                        0.0,                                        0.0,    1.0);
+        // let transform: *const Matrix4 = &Matrix4::new(
+        //     1.0,    0.0,    0.0,    0.0,
+        //     0.0,    1.0,    0.0,    0.0,
+        //     0.0,    0.0,    1.0,    0.0,
+        //     0.0,    0.0,    0.0,    1.0);
+        
+        unsafe {
+            let transformLoc = gl::GetUniformLocation(shader_program.id(), "transform".as_ptr() as (*const i8));
+            gl::UniformMatrix4fv(transformLoc, 1, gl::FALSE, transform as (*const gl::types::GLfloat));
+        }
+
+        // Drawing geometry
         unsafe {
             gl::BindVertexArray(VAO);
             // gl::DrawArrays(

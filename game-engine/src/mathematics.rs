@@ -986,15 +986,21 @@ pub mod linalg {
     impl Not for Complex { type Output = Self; fn not(self) -> Self {
         let d = 1.0 / self.magnitude_sqr();
         return (-self) * d; } }
-    // impl Not for Matrix2 { type Output = Self; fn not(self) -> Self {
-
-    // }}
-    // impl Not for Matrix3 { type Output = Self; fn not(self) -> Self {
-
-    // }}
-    // impl Not for Matrix4 { type Output = Self; fn not(self) -> Self {
-
-    // }}
+    impl Not for Matrix2 { type Output = Self; fn not(self) -> Self {
+        if self.determinant() == 0.0 {
+            return Self::zero();
+        } else {
+            return self.adjugate() / self.determinant(); } } }
+    impl Not for Matrix3 { type Output = Self; fn not(self) -> Self {
+        if self.determinant() == 0.0 {
+            return Self::zero();
+        } else {
+            return self.adjugate() / self.determinant(); } } }
+    impl Not for Matrix4 { type Output = Self; fn not(self) -> Self {
+        if self.determinant() == 0.0 {
+            return Self::zero();
+        } else {
+            return self.adjugate() / self.determinant(); } } }
     //      Scalar-Struct Multiplication: { a * s, a *= s, s * a }
     impl Mul<f32> for Vector2 { type Output = Self; fn mul(self, s: f32) -> Self { 
         return Self::new(self.x * s, self.y * s); } }

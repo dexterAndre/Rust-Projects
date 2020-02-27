@@ -1,12 +1,14 @@
 #version 330 core
+out vec4 FragColor;
 
-in VS_OUTPUT {
-    vec3 Color;
-} IN;
+in vec4 Color;
 
-out vec4 Color;
+// texture samplers
+// uniform sampler2D texture1;
+// uniform sampler2D texture2;
 
 void main()
 {
-    Color = vec4(IN.Color, 1.0f);
+	// linearly interpolate between both textures (80% container, 20% awesomeface)
+	FragColor = Color;
 }

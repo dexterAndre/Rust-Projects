@@ -78,7 +78,7 @@ pub mod num {
 }
 
 pub mod linalg {
-    pub use super::num::constants as num;
+    pub use super::num::constants::*;
     pub use std::ops::{ Add, AddAssign, Sub, SubAssign, Neg, Mul, MulAssign, Div, DivAssign, BitXor, Not };
     pub use std::f32;
 
@@ -163,6 +163,14 @@ pub mod linalg {
     impl Matrix4    { pub fn from_vector4(a: Vector4, b: Vector4, c: Vector4, d: Vector4) -> Self {
         return Self::new(a.x, a.y, a.z, a.w, b.x, b.y, b.z, b.w, c.x, c.y, c.z, c.w, d.x, d.y, d.z, d.w); } }
 
+    // Read functions
+    impl Vector2    { pub fn as_ptr(&self)  -> *const f32 { return &self.x; } }
+    impl Vector3    { pub fn as_ptr(&self)  -> *const f32 { return &self.x; } }
+    impl Vector4    { pub fn as_ptr(&self)  -> *const f32 { return &self.x; } }
+    impl Matrix2    { pub fn as_ptr(&self)  -> *const f32 { return &self.e[0][0]; } }
+    impl Matrix3    { pub fn as_ptr(&self)  -> *const f32 { return &self.e[0][0]; } }
+    impl Matrix4    { pub fn as_ptr(&self)  -> *const f32 { return &self.e[0][0]; } }
+    
     // impl Quaternion {
     //     // Unfinished
     // }
@@ -171,8 +179,83 @@ pub mod linalg {
     // }
     
     //      Transformation Constructors
+    //          Translation
+    impl Matrix4    { pub fn translation(v: Vector3) -> Self {
+        return Matrix4::new(
+            1.0, 0.0, 0.0, v.x,
+            0.0, 1.0, 0.0, v.y,
+            0.0, 0.0, 1.0, v.z,
+            0.0, 0.0, 0.0, 1.0); } }
+    //          Rotation
     impl Complex    { pub fn from_rotor(angle: f32)                     -> Self { return Self::new(f32::cos(angle), f32::sin(angle)); } }
+    impl Matrix4    { pub fn rotation_x(t: f32) -> Self { 
+        let cos = f32::cos(t); 
+        let sin = f32::sin(t);
+        return Self::new(
+            1.0,    0.0,    0.0,    0.0,
+            0.0,    cos,    -sin,   0.0,
+            0.0,    sin,    cos,    0.0,
+            0.0,    0.0,    0.0,    1.0); } }
+    impl Matrix4    { pub fn rotation_y(t: f32) -> Self { 
+        let cos = f32::cos(t); 
+        let sin = f32::sin(t);
+        return Self::new(
+            cos,    0.0,    sin,    0.0,
+            0.0,    1.0,    0.0,    0.0,
+            -sin,   0.0,    cos,    0.0,
+            0.0,    0.0,    0.0,    1.0); } }
+    impl Matrix4    { pub fn rotation_z(t: f32) -> Self { 
+        let cos = f32::cos(t); 
+        let sin = f32::sin(t);
+        return Self::new(
+            cos,    -sin,   0.0,    0.0,
+            sin,    cos,    0.0,    0.0,
+            0.0,    0.0,    0.0,    0.0,
+            0.0,    0.0,    0.0,    1.0); } }
+    impl Matrix4    { pub fn rotation(t: f32, v: Vector3) -> Self {
+        // Add cosine-sine double calculation here at a later time
+        let cos = f32::cos(t);
+        let sin = f32::sin(t);
+        let d = 1.0 - cos;
 
+        let x = v.x * d;
+        let y = v.y * d;
+        let z = v.z * d;
+        let vxvy = x * v.y;
+        let vxvz = x * v.z;
+        let vyvz = y * v.z;
+
+        return Self::new(
+            cos + x * v.x,      vxvy - sin * v.z,   vxvz + sin * v.y,   0.0,
+            vxvy + sin * v.z,   cos + y * v.y,      vyvz - sin * v.x,   0.0,
+            vxvz - sin * v.y,   vyvz + sin * v.x,   cos + z * v.z,      0.0,
+            0.0,                0.0,                0.0,                1.0); } }
+
+    //          Scale
+    impl Matrix4    { pub fn scale_uniform(t: f32) -> Self {
+        return Self::new(
+            t, 0.0, 0.0, 0.0,
+            0.0, t, 0.0, 0.0,
+            0.0, 0.0, t, 0.0,
+            0.0, 0.0, 0.0, 1.0); } }
+    impl Matrix4    { pub fn scale_vector(v: Vector3) -> Self {
+        return Self::new(
+            v.x, 0.0, 0.0, 0.0,
+            0.0, v.y, 0.0, 0.0,
+            0.0, 0.0, v.z, 0.0,
+            0.0, 0.0, 0.0, 1.0); } }
+    //          Other
+    impl Matrix4    { pub fn perspective(fov: f32, aspect_ratio: f32, near: f32, far: f32) -> Self {
+        let scl_y = 1.0 / f32::tan(DEG2RAD * fov / 2.0);
+        let scl_x = scl_y / aspect_ratio;
+        let near_m_far = near - far;
+
+        return Self::new(
+            scl_x,  0.0,    0.0,                            0.0,
+            0.0,    scl_y,  0.0,                            0.0,
+            0.0,    0.0,    (near + far) / near_m_far,      2.0 * near * far / near_m_far,
+            0.0,    0.0,    -1.0,                           0.0); } }
+    
     // Conversion Methods
     impl Vector2    { pub fn from_vector2(v: &Vector2)                  -> Self { return Self::new(v.x, v.y); } }
     impl Complex    { pub fn from_vector2(v: &Vector2)                  -> Self { return Self::new(v.x, v.y); } }
@@ -399,6 +482,9 @@ pub mod linalg {
     impl Matrix2 { pub fn zero()        -> Self { return Self::new(0.0, 0.0, 0.0, 0.0); } }
     impl Matrix3 { pub fn zero()        -> Self { return Self::new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0); } }
     impl Matrix4 { pub fn zero()        -> Self { return Self::new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0); } }
+    impl Matrix2 { pub fn identity()    -> Self { return Self::new(1.0, 0.0, 0.0, 1.0); } }
+    impl Matrix3 { pub fn identity()    -> Self { return Self::new(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0); } }
+    impl Matrix4 { pub fn identity()    -> Self { return Self::new(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0); } }
 
     impl Vector2 { pub fn right()       -> Self { return Self::new(1.0, 0.0); } }
     impl Vector3 { pub fn right()       -> Self { return Self::new(1.0, 0.0, 0.0); } }
@@ -412,31 +498,30 @@ pub mod linalg {
     impl Vector3 { pub fn down()        -> Self { return Self::new(0.0, 0.0, -1.0); } }
 
     impl Vector2 { pub fn Q1()          -> Self { return Self::new(1.0, 1.0); } }
-    impl Vector2 { pub fn Q1n()         -> Self { return Self::new(num::SQRT2OVER2, num::SQRT2OVER2); } }
+    impl Vector2 { pub fn Q1n()         -> Self { return Self::new(SQRT2OVER2, SQRT2OVER2); } }
     impl Vector3 { pub fn Q1()          -> Self { return Self::new(1.0, 1.0, 1.0); } }
-    impl Vector3 { pub fn Q1n()         -> Self { return Self::new(num::SQRT3OVER3, num::SQRT3OVER3, num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q1n()         -> Self { return Self::new(SQRT3OVER3, SQRT3OVER3, SQRT3OVER3); } }
     impl Vector2 { pub fn Q2()          -> Self { return Self::new(-1.0, 1.0); } }
-    impl Vector2 { pub fn Q2n()         -> Self { return Self::new(-num::SQRT2OVER2, num::SQRT2OVER2); } }
+    impl Vector2 { pub fn Q2n()         -> Self { return Self::new(-SQRT2OVER2, SQRT2OVER2); } }
     impl Vector3 { pub fn Q2()          -> Self { return Self::new(-1.0, 1.0, 1.0); } }
-    impl Vector3 { pub fn Q2n()         -> Self { return Self::new(-num::SQRT3OVER3, num::SQRT3OVER3, num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q2n()         -> Self { return Self::new(-SQRT3OVER3, SQRT3OVER3, SQRT3OVER3); } }
     impl Vector2 { pub fn Q3()          -> Self { return Self::new(-1.0, -1.0); } }
-    impl Vector2 { pub fn Q3n()         -> Self { return Self::new(-num::SQRT2OVER2, -num::SQRT2OVER2); } }
+    impl Vector2 { pub fn Q3n()         -> Self { return Self::new(-SQRT2OVER2, -SQRT2OVER2); } }
     impl Vector3 { pub fn Q3()          -> Self { return Self::new(-1.0, -1.0, 1.0); } }
-    impl Vector3 { pub fn Q3n()         -> Self { return Self::new(-num::SQRT3OVER3, -num::SQRT3OVER3, num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q3n()         -> Self { return Self::new(-SQRT3OVER3, -SQRT3OVER3, SQRT3OVER3); } }
     impl Vector2 { pub fn Q4()          -> Self { return Self::new(1.0, 1.0); } }
-    impl Vector2 { pub fn Q4n()         -> Self { return Self::new(num::SQRT2OVER2, num::SQRT2OVER2); } }
+    impl Vector2 { pub fn Q4n()         -> Self { return Self::new(SQRT2OVER2, SQRT2OVER2); } }
     impl Vector3 { pub fn Q4()          -> Self { return Self::new(1.0, 1.0, 1.0); } }
-    impl Vector3 { pub fn Q4n()         -> Self { return Self::new(num::SQRT3OVER3, num::SQRT3OVER3, num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q4n()         -> Self { return Self::new(SQRT3OVER3, SQRT3OVER3, SQRT3OVER3); } }
     impl Vector3 { pub fn Q5()          -> Self { return Self::new(1.0, 1.0, -1.0); } }
-    impl Vector3 { pub fn Q5n()         -> Self { return Self::new(num::SQRT3OVER3, num::SQRT3OVER3, -num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q5n()         -> Self { return Self::new(SQRT3OVER3, SQRT3OVER3, -SQRT3OVER3); } }
     impl Vector3 { pub fn Q6()          -> Self { return Self::new(-1.0, 1.0, -1.0); } }
-    impl Vector3 { pub fn Q6n()         -> Self { return Self::new(-num::SQRT3OVER3, num::SQRT3OVER3, -num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q6n()         -> Self { return Self::new(-SQRT3OVER3, SQRT3OVER3, -SQRT3OVER3); } }
     impl Vector3 { pub fn Q7()          -> Self { return Self::new(-1.0, -1.0, -1.0); } }
-    impl Vector3 { pub fn Q7n()         -> Self { return Self::new(-num::SQRT3OVER3, -num::SQRT3OVER3, -num::SQRT3OVER3); } }
+    impl Vector3 { pub fn Q7n()         -> Self { return Self::new(-SQRT3OVER3, -SQRT3OVER3, -SQRT3OVER3); } }
     impl Vector3 { pub fn Q8()          -> Self { return Self::new(1.0, -1.0, -1.0); } }
-    impl Vector3 { pub fn Q8n()         -> Self { return Self::new(num::SQRT3OVER3, -num::SQRT3OVER3, -num::SQRT3OVER3); } }
-
-
+    impl Vector3 { pub fn Q8n()         -> Self { return Self::new(SQRT3OVER3, -SQRT3OVER3, -SQRT3OVER3); } }
+    
     // impl Complex { /* Unfinished */ }
     // impl Dual { /* Unfinished */ }
     // impl Quaternion { /* Unfinished */ }
@@ -1304,7 +1389,7 @@ pub mod linalg {
         let det = (*a) / (*b);
         let mut angle = f32::atan2(det, dot);
         if angle < 0.0 {
-            angle += num::TAU;
+            angle += TAU;
         }
         return angle;
     } }
@@ -1345,7 +1430,7 @@ pub mod linalg {
         }
         let t2 = f32::asin(n * f32::sin(t1)) * signum;
         let t3 = Self::angle(b, &Self::right());
-        let arg = t3 + num::PI + t2;
+        let arg = t3 + PI + t2;
 
         return Self::from_polar(arg, mag);
     } }
@@ -1360,7 +1445,7 @@ pub mod linalg {
         }
         let t2 = f32::asin(n * f32::sin(t1)) * signum;
         let t3 = Self::angle(b, &Self::right());
-        let arg = t3 + num::PI + t2;
+        let arg = t3 + PI + t2;
 
         return Self::from_polar(arg, 1.0);
     } }

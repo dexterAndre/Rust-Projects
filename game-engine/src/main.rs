@@ -1,4 +1,4 @@
-// Simple Rust game engine by Dexter André Osiander (2019)
+// Simple Rust game engine by Dexter André Osiander (2020)
 #![allow(dead_code)]
 #![allow(warnings)]
 
@@ -14,7 +14,11 @@ use crate::rendering::open_gl::{ Action, Context, Key, Window };
 // mod render_gl;
 mod mathematics;
 
-
+macro_rules! c_str {
+    ($literal:expr) => {
+        CStr::from_bytes_with_nul_unchecked(concat!($literal, "\0").as_bytes())
+    }
+}
 
 /*
 
@@ -41,6 +45,8 @@ fn main() {
 
 
 fn main() {
+
+
     // test_vector2();
     // test_math_profiling();
     test_rendering();
@@ -52,9 +58,9 @@ fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
         glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
             window.set_should_close(true)
         }
-        // glfw::WindowEvent::Key(Key::Enter, _, Action::Release, _) => {
-        //     println!("Hello, world!");
-        // }
+        glfw::WindowEvent::Key(Key::Enter, _, Action::Release, _) => {
+            println!("Hello, world!");
+        }
         _ => {}
     }
 }
@@ -146,6 +152,18 @@ fn test_array() {
 }
 
 fn test_rendering() {
+    // Dependencies
+    pub use mathematics::num;
+    pub use mathematics::num::constants as constants;
+    pub use mathematics::linalg::*;
+    pub use rendering::open_gl;
+    pub use gl::{ self, types::* };
+    use std::{ ffi::CStr, ffi::CString, os::raw::c_void, path::Path, mem, ptr };
+    use image;
+    use image::GenericImage;
+    // use cgmath::{Matrix4, Vector3, vec3,  Deg, Rad, perspective};
+    use cgmath::prelude::*;
+
     // Time
     let mut time_current: u128 = time::now_ms();
     let mut time_delta: u128 = 0;
@@ -153,14 +171,22 @@ fn test_rendering() {
     // Window & OpenGL
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
     //      Setting lowest OpenGL version
-    glfw.window_hint(glfw::WindowHint::ContextVersion(4, 5));
+    glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
     //      Setting profile
     glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
+    #[cfg(target_os = "macos")]
+    glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
+    //      Window creation
     let (mut window, events) = glfw
-        .create_window(800, 600, "Game Engine", glfw::WindowMode::Windowed)
+        .create_window(
+            open_gl::scr_width, 
+            open_gl::scr_height, 
+            "Game Engine", 
+            glfw::WindowMode::Windowed)
         .expect("Failed to create GLFW window.");
-    window.set_key_polling(true);
-    window.make_current();
+        window.make_current();
+        window.set_key_polling(true);
+        window.set_framebuffer_size_polling(true);
     
     //      Setting up OpenGL
     //          Loading gl functions
@@ -168,11 +194,10 @@ fn test_rendering() {
     unsafe {
         gl::Viewport(0, 0, 800, 600);
         gl::ClearColor(0.2, 0.3, 0.3, 1.0);
+        gl::Enable(gl::DEPTH_TEST);
     }
     
     //      Setting up shaders
-    use std::ffi::CString;
-
     let vert_shader = rendering::open_gl::Shader::from_vert_source(
         &CString::new(include_str!("triangle.vert")).unwrap()
     ).unwrap();
@@ -187,48 +212,62 @@ fn test_rendering() {
     shader_program.set_used();
 
     //      Setting up triangle
-    let vertices: Vec<f32> = vec![
-        // positions            // colors
-        0.5,    0.5,    0.5,    1.0,    1.0,    1.0,    // Q1
-        -0.5,   0.5,    0.5,    1.0,    1.0,    0.0,    // Q2
-        -0.5,   -0.5,   0.5,    1.0,    0.0,    1.0,    // Q3
-        0.5,    -0.5,   0.5,    0.0,    1.0,    1.0,    // Q4
-        0.5,    0.5,    -0.5,   1.0,    0.0,    0.0,    // Q5
-        -0.5,   0.5,    -0.5,   0.0,    1.0,    0.0,    // Q6
-        -0.5,   -0.5,   -0.5,   0.0,    0.0,    1.0,    // Q7
-        0.5,    -0.5,   -0.5,   0.0,    0.0,    0.0,    // Q8
+    let vertices: [f32; 216] = [
+        -0.5, -0.5, -0.5,  0.0, 0.0, 0.0,
+         0.5, -0.5, -0.5,  1.0, 0.0, 0.0,
+         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
+         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
+        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0,
+        -0.5, -0.5, -0.5,  0.0, 0.0, 0.0,
+
+        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
+         0.5, -0.5,  0.5,  1.0, 0.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 1.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 1.0, 0.0,
+        -0.5,  0.5,  0.5,  0.0, 1.0, 0.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
+
+        -0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+        -0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
+        -0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+
+         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
+         0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+         0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+         0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+
+        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+         0.5, -0.5, -0.5,  1.0, 1.0, 0.0,
+         0.5, -0.5,  0.5,  1.0, 0.0, 0.0,
+         0.5, -0.5,  0.5,  1.0, 0.0, 0.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+
+        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0,
+         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+        -0.5,  0.5,  0.5,  0.0, 0.0, 0.0,
+        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0
+   ];
+   // world space positions of our cubes
+   let cubePositions: [Vector3; 10] = [
+        Vector3::new(0.0, 0.0, 0.0),
+        Vector3::new(2.0, 5.0, -15.0),
+        Vector3::new(-1.5, -2.2, -2.5),
+        Vector3::new(-3.8, -2.0, -12.3),
+        Vector3::new(2.4, -0.4, -3.65),
+        Vector3::new(-1.7, 3.0, -7.35),
+        Vector3::new(1.3, -2.0, -2.25),
+        Vector3::new(1.5, 2.0, -2.15),
+        Vector3::new(1.5, 0.2, -1.35),
+        Vector3::new(-1.3, 1.0, -1.25)
     ];
-    let indices: Vec<i32> = vec![
-        // Top
-        0, 1, 2,
-        0, 2, 3,
-
-        // Back
-        4, 0, 1,
-        4, 1, 5,
-
-        // Bottom
-        7, 4, 5,
-        7, 5, 6,
-
-        // Front
-        3, 2, 6,
-        3, 6, 7,
-
-        // Right
-        4, 0, 3,
-        4, 3, 7,
-
-        // Left
-        1, 5, 6,
-        1, 6, 2,
-    ];
-    // let vertices: Vec<f32> = vec![
-    //     // positions            // colors
-    //     -0.5,   -0.5,    0.0,   1.0,    0.0,    0.0,    // bottom right
-    //      0.5,   -0.5,    0.0,   0.0,    1.0,    0.0,    // bottom left
-    //      0.0,    0.5,    0.0,   0.0,    0.0,    1.0     // top
-    // ];
 
     // Generating, binding, and filling buffers
     //      1. Creating empty buffer variables
@@ -240,7 +279,6 @@ fn test_rendering() {
         //      2. Generating buffers in OpenGL
         gl::GenVertexArrays(1, &mut VAO);
         gl::GenBuffers(1, &mut VBO);
-        gl::GenBuffers(1, &mut EBO);
 
         //      3.  Binding the vertex array
         gl::BindVertexArray(VAO);
@@ -250,49 +288,53 @@ fn test_rendering() {
         gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
         gl::BufferData(
             gl::ARRAY_BUFFER,
-            (vertices.len() * std::mem::size_of::<f32>()) as gl::types::GLsizeiptr,
-            vertices.as_ptr() as *const gl::types::GLvoid,
-            gl::STATIC_DRAW,
+            (vertices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
+            &vertices[0] as *const f32 as *const c_void,
+            gl::STATIC_DRAW
         );
+        // gl::BufferData(
+        //     gl::ARRAY_BUFFER,
+        //     (vertices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
+        //     &vertices[0] as *const f32 as *const c_void,
+        //     gl::STATIC_DRAW,
+        // );
         //      4.2 Element buffer object
-        gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, EBO);
-        gl::BufferData(
-            gl::ELEMENT_ARRAY_BUFFER,
-            (indices.len() * std::mem::size_of::<i32>()) as gl::types::GLsizeiptr,
-            indices.as_ptr() as *const gl::types::GLvoid,
-            gl::STATIC_DRAW,
-        );
-        
-        //      5. Configure vertex attributes
+        // gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, EBO);
+        // gl::BufferData(
+        //     gl::ELEMENT_ARRAY_BUFFER,
+        //     (indices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
+        //     &indices[0] as *const i32 as *const c_void,
+        //     gl::STATIC_DRAW
+        // );
+
+        //      5.1 Configure vertex attributes
         //          Same as "layout = 0" in vertex shader
         gl::EnableVertexAttribArray(0);
         gl::VertexAttribPointer(
-            0,  // index of the generic vertex attribute ("layout (location = 0)")
-            3,  // number of components per generic vertex attribute
-            gl::FLOAT,  // data type
-            gl::FALSE,  // normalized (int-to-float conversion)
-            (6 * std::mem::size_of::<f32>()) as gl::types::GLint,   // stride (byte offset between consecutive attributes)
-            std::ptr::null()    // offset of the first component
+            0,                                                  // index of the generic vertex attribute ("layout (location = 0)")
+            3,                                                  // number of components per generic vertex attribute
+            gl::FLOAT,                                          // data type
+            gl::FALSE,                                          // normalized (int-to-float conversion)
+            (6 * std::mem::size_of::<GLfloat>()) as GLsizei,    // stride (byte offset between consecutive attributes)
+            std::ptr::null()                                    // offset of the first component
         );
-        //          We put color information at (location = 1)
+
+        //      5.2 Setting up colors
         gl::EnableVertexAttribArray(1);
         gl::VertexAttribPointer(
-            1,  // index of the generic vertex attribute ("layout (location = 0)")
-            3,  // RGB = 3
-            gl::FLOAT,  // data type
-            gl::FALSE,  // normalized (int-to-float conversion)
-            (6 * std::mem::size_of::<f32>()) as gl::types::GLint,   // stride (byte offset between consecutive attributes)
-            (3 * std::mem::size_of::<f32>()) as *const gl::types::GLvoid
+            1,
+            3,
+            gl::FLOAT,
+            gl::FALSE,
+            (6 * std::mem::size_of::<GLfloat>()) as GLsizei,
+            (3 * mem::size_of::<GLfloat>()) as *const c_void
         );
         
         //      6. Unbinding buffers
-        gl::BindBuffer(gl::ARRAY_BUFFER, 0);
+        // gl::BindBuffer(gl::ARRAY_BUFFER, 0);
         // gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, 0);
-        gl::BindVertexArray(0);
+        // gl::BindVertexArray(0);
     }
-
-
-
     
     //      Render loop
     while !window.should_close() {
@@ -308,31 +350,52 @@ fn test_rendering() {
 
         // Clearing color
         unsafe {
-            gl::Clear(gl::COLOR_BUFFER_BIT);
-            // gl::ClearColor(0.2, 0.3, 0.3, 1.0);
+            gl::ClearColor(0.2, 0.3, 0.3, 1.0);
+            gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
         
         // Drawing geometry
         shader_program.set_used();
 
         // Transformations
-        use mathematics::num;
-        use mathematics::linalg::Matrix4;
-        let transform: *const Matrix4 = &Matrix4::new(
-            f32::cos(30.0 * num::constants::DEG2RAD),   -f32::sin(30.0 * num::constants::DEG2RAD),  0.0,    0.0,
-            f32::sin(30.0 * num::constants::DEG2RAD),   f32::cos(30.0 * num::constants::DEG2RAD),   0.0,    0.0,
-            0.0,                                        0.0,                                        1.0,    0.0,
-            0.0,                                        0.0,                                        0.0,    1.0);
-        // let transform: *const Matrix4 = &Matrix4::new(
-        //     1.0,    0.0,    0.0,    0.0,
-        //     0.0,    1.0,    0.0,    0.0,
-        //     0.0,    0.0,    1.0,    0.0,
-        //     0.0,    0.0,    0.0,    1.0);
-        
-        unsafe {
-            let transformLoc = gl::GetUniformLocation(shader_program.id(), "transform".as_ptr() as (*const i8));
-            gl::UniformMatrix4fv(transformLoc, 1, gl::FALSE, transform as (*const gl::types::GLfloat));
+        let model = Matrix4::new(
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        );
+        // let model: Matrix4 = Matrix4::identity();
+        let view = Matrix4::translation(Vector3::new(0.0, 0.0, -30.0));
+        // let projection = Matrix4::identity();
+        let projection = Matrix4::perspective(45.0, (open_gl::scr_width as f32) / (open_gl::scr_height as f32), 0.1, 100.0);
+        // let projection = Matrix4::perspective(60.0, 1.0, 1.0, 100.0);
+        // let projection = Matrix4::new(
+        //     0.2, 0.0, 0.0, 0.0,
+        //     0.0, 0.2, 0.0, 0.0,
+        //     0.0, 0.0, 0.0101, 1.0101,
+        //     0.0, 0.0, 0.0, 1.0
+        // );
+        // let projection: cgmath::Matrix4<f32> = cgmath::perspective(cgmath::Deg(45.0), open_gl::scr_width as f32 / open_gl::scr_height as f32, 0.1, 100.0);
+        {
+            // println!("{}", projection.to_string());
         }
+        
+        let mut model_loc: GLint = 0; 
+        let mut view_loc: GLint = 0;
+        let mut proj_loc: GLint = 0;
+
+        unsafe {
+            model_loc = gl::GetUniformLocation(shader_program.id(), c_str!("model").as_ptr() as *const GLchar);
+            view_loc = gl::GetUniformLocation(shader_program.id(), c_str!("view").as_ptr() as *const GLchar);
+            proj_loc = gl::GetUniformLocation(shader_program.id(), c_str!("projection").as_ptr() as *const GLchar);
+                        
+            gl::UniformMatrix4fv(model_loc, 1, gl::FALSE, model.as_ptr());
+            gl::UniformMatrix4fv(view_loc, 1, gl::FALSE, view.as_ptr());
+            gl::UniformMatrix4fv(proj_loc, 1, gl::FALSE, projection.as_ptr());
+        }
+            
+        // shader_program.set_mat4("Model", transform);
+        // shader_program.set_mat4("View", camera);
 
         // Drawing geometry
         unsafe {
@@ -342,12 +405,22 @@ fn test_rendering() {
             //     0, // starting index in the enabled arrays
             //     3 // number of indices to be rendered
             // );
-            gl::DrawElements(
-                gl::TRIANGLES,      // mode
-                12,                  // ?
-                gl::UNSIGNED_INT,  // ?
-                0 as *const gl::types::GLvoid
-            );
+            // gl::DrawElements(
+            //     gl::TRIANGLES,      // mode
+            //     36,                  // ?
+            //     gl::UNSIGNED_INT,  // ?
+            //     0 as *const gl::types::GLvoid
+            // );
+            // gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, 0 as *const GLvoid);
+
+            for (i, position) in cubePositions.iter().enumerate() {
+                let mut model = Matrix4::translation(*position);
+                let angle = 20.0 * i as f32;
+                model = model * Matrix4::scale_uniform(1.0) * Matrix4::rotation(angle, Vector3::new(1.0, 0.3, 0.5).normalization());
+                gl::UniformMatrix4fv(model_loc, 1, gl::FALSE, model.as_ptr());
+
+                gl::DrawArrays(gl::TRIANGLES, 0, 36);
+            }
         }
         
         window.swap_buffers();
@@ -360,6 +433,13 @@ fn test_rendering() {
         // println!("Time::now_ms(): {}", Time::now_ms());
         // println!("time_current: {}", time_current);
         // println!("time_delta: {}", time_delta);
+    }
+
+    // Deallocating resources
+    unsafe {
+        gl::DeleteVertexArrays(1, &VAO);
+        gl::DeleteBuffers(1, &VBO);
+        gl::DeleteBuffers(1, &EBO);
     }
 }
 

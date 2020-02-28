@@ -212,48 +212,48 @@ fn test_rendering() {
     shader_program.set_used();
 
     //      Setting up triangle
-    let vertices: [f32; 216] = [
-        -0.5, -0.5, -0.5,  0.0, 0.0, 0.0,
-         0.5, -0.5, -0.5,  1.0, 0.0, 0.0,
-         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
-         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
-        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0,
-        -0.5, -0.5, -0.5,  0.0, 0.0, 0.0,
+    let vertices: [f32; 180] = [
+        -0.5, -0.5, -0.5,  0.0, 0.0,
+         0.5, -0.5, -0.5,  1.0, 0.0,
+         0.5,  0.5, -0.5,  1.0, 1.0,
+         0.5,  0.5, -0.5,  1.0, 1.0,
+        -0.5,  0.5, -0.5,  0.0, 1.0,
+        -0.5, -0.5, -0.5,  0.0, 0.0,
 
-        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
-         0.5, -0.5,  0.5,  1.0, 0.0, 0.0,
-         0.5,  0.5,  0.5,  1.0, 1.0, 0.0,
-         0.5,  0.5,  0.5,  1.0, 1.0, 0.0,
-        -0.5,  0.5,  0.5,  0.0, 1.0, 0.0,
-        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0,
+         0.5, -0.5,  0.5,  1.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 1.0,
+         0.5,  0.5,  0.5,  1.0, 1.0,
+        -0.5,  0.5,  0.5,  0.0, 1.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0,
 
-        -0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
-        -0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
-        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
-        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
-        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
-        -0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+        -0.5,  0.5,  0.5,  1.0, 0.0,
+        -0.5,  0.5, -0.5,  1.0, 1.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0,
+        -0.5,  0.5,  0.5,  1.0, 0.0,
 
-         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
-         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
-         0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
-         0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
-         0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
-         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 0.0,
+         0.5,  0.5, -0.5,  1.0, 1.0,
+         0.5, -0.5, -0.5,  0.0, 1.0,
+         0.5, -0.5, -0.5,  0.0, 1.0,
+         0.5, -0.5,  0.5,  0.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 0.0,
 
-        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
-         0.5, -0.5, -0.5,  1.0, 1.0, 0.0,
-         0.5, -0.5,  0.5,  1.0, 0.0, 0.0,
-         0.5, -0.5,  0.5,  1.0, 0.0, 0.0,
-        -0.5, -0.5,  0.5,  0.0, 0.0, 0.0,
-        -0.5, -0.5, -0.5,  0.0, 1.0, 0.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0,
+         0.5, -0.5, -0.5,  1.0, 1.0,
+         0.5, -0.5,  0.5,  1.0, 0.0,
+         0.5, -0.5,  0.5,  1.0, 0.0,
+        -0.5, -0.5,  0.5,  0.0, 0.0,
+        -0.5, -0.5, -0.5,  0.0, 1.0,
 
-        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0,
-         0.5,  0.5, -0.5,  1.0, 1.0, 0.0,
-         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
-         0.5,  0.5,  0.5,  1.0, 0.0, 0.0,
-        -0.5,  0.5,  0.5,  0.0, 0.0, 0.0,
-        -0.5,  0.5, -0.5,  0.0, 1.0, 0.0
+        -0.5,  0.5, -0.5,  0.0, 1.0,
+         0.5,  0.5, -0.5,  1.0, 1.0,
+         0.5,  0.5,  0.5,  1.0, 0.0,
+         0.5,  0.5,  0.5,  1.0, 0.0,
+        -0.5,  0.5,  0.5,  0.0, 0.0,
+        -0.5,  0.5, -0.5,  0.0, 1.0
    ];
    // world space positions of our cubes
    let cubePositions: [Vector3; 10] = [
@@ -274,6 +274,7 @@ fn test_rendering() {
     let mut VAO: gl::types::GLuint = 0;
     let mut VBO: gl::types::GLuint = 0;
     let mut EBO: gl::types::GLuint = 0;
+    let (mut tex_1, mut tex_2) = (0, 0);
 
     unsafe {
         //      2. Generating buffers in OpenGL
@@ -315,21 +316,72 @@ fn test_rendering() {
             3,                                                  // number of components per generic vertex attribute
             gl::FLOAT,                                          // data type
             gl::FALSE,                                          // normalized (int-to-float conversion)
-            (6 * std::mem::size_of::<GLfloat>()) as GLsizei,    // stride (byte offset between consecutive attributes)
+            (5 * std::mem::size_of::<GLfloat>()) as GLsizei,    // stride (byte offset between consecutive attributes)
             std::ptr::null()                                    // offset of the first component
         );
 
-        //      5.2 Setting up colors
+        //      5.2 Setting up texture coordinates
         gl::EnableVertexAttribArray(1);
         gl::VertexAttribPointer(
             1,
-            3,
+            2,
             gl::FLOAT,
             gl::FALSE,
-            (6 * std::mem::size_of::<GLfloat>()) as GLsizei,
+            (5 * std::mem::size_of::<GLfloat>()) as GLsizei,
             (3 * mem::size_of::<GLfloat>()) as *const c_void
         );
-        
+
+        //      5.3 Texture 1
+        gl::GenTextures(1, &mut tex_1);
+        gl::BindTexture(gl::TEXTURE_2D, tex_1);
+        //      5.3.1 Wrapping mode
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
+        //      5.3.2 Filtering mode
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as i32);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
+        //      5.3.3 Reading image into texture
+        let img = image::open(&Path::new("resources/textures/wall.jpg")).expect("Failed to load texture.");
+        let img_data = img.raw_pixels();
+        gl::TexImage2D(
+            gl::TEXTURE_2D,
+            0,
+            gl::RGB as i32,
+            img.width() as i32,
+            img.height() as i32,
+            0,
+            gl::RGB,
+            gl::UNSIGNED_BYTE,
+            &img_data[0] as *const u8 as *const c_void
+        );
+        gl::GenerateMipmap(gl::TEXTURE_2D);
+        //      5.4 Texture 2
+        gl::GenTextures(1, &mut tex_2);
+        gl::BindTexture(gl::TEXTURE_2D, tex_2);
+        //      5.4.1 Wrapping mode
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
+        //      5.4.2 Filtering mode
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as i32);
+        gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
+        //      5.4.3 Reading image into texture
+        let img = image::open(&Path::new("resources/textures/awesomeface.png")).expect("Failed to load texture.");
+        let img_data = img.raw_pixels();
+        gl::TexImage2D(
+            gl::TEXTURE_2D,
+            0,
+            gl::RGB as i32,
+            img.width() as i32,
+            img.height() as i32,
+            0,
+            gl::RGB,
+            gl::UNSIGNED_BYTE,
+            &img_data[0] as *const u8 as *const c_void
+        );
+        gl::GenerateMipmap(gl::TEXTURE_2D);
+
+        shader_program.set_int(c_str!("tex_1"), 0);
+        shader_program.set_int(c_str!("tex_2"), 1);
         //      6. Unbinding buffers
         // gl::BindBuffer(gl::ARRAY_BUFFER, 0);
         // gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, 0);
@@ -354,6 +406,14 @@ fn test_rendering() {
             gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
         }
         
+        // Setting up textures
+        unsafe {
+            gl::ActiveTexture(gl::TEXTURE0);
+            gl::BindTexture(gl::TEXTURE_2D, tex_1);
+            gl::ActiveTexture(gl::TEXTURE1);
+            gl::BindTexture(gl::TEXTURE_2D, tex_2);
+        }
+
         // Drawing geometry
         shader_program.set_used();
 

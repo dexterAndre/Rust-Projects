@@ -77,7 +77,7 @@ pub mod open_gl {
         pub unsafe fn set_bool(&self, name: &str, value: bool) {
             gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr() as *const i8), value as i32);
         }
-        pub unsafe fn set_int(&self, name: &str, value: i32) {
+        pub unsafe fn set_int(&self, name: &CStr, value: i32) {
             gl::Uniform1i(gl::GetUniformLocation(self.id, name.as_ptr() as *const i8), value);
         }
         pub unsafe fn set_float(&self, name: &str, value: f32) {

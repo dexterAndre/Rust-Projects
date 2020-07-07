@@ -20,6 +20,10 @@ macro_rules! c_str {
     }
 }
 
+pub struct entity {
+    id: i32
+}
+
 /*
 
 fn main() {
@@ -53,7 +57,7 @@ fn main() {
     // test_array();
 }
 
-fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
+fn process_input(window: &mut glfw::Window, event: glfw::WindowEvent) {
     match event {
         glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
             window.set_should_close(true)
@@ -63,6 +67,12 @@ fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
         }
         _ => {}
     }
+}
+
+
+
+fn render() {
+
 }
 
 fn test_array() {
@@ -397,7 +407,7 @@ fn test_rendering() {
         // Handling input
         glfw.poll_events();
         for (_, event) in glfw::flush_messages(&events) {
-            handle_window_event(&mut window, event);
+            process_input(&mut window, event);
         }
 
         // Clearing color
@@ -425,7 +435,7 @@ fn test_rendering() {
             0.0, 0.0, 0.0, 1.0
         );
         // let model: Matrix4 = Matrix4::identity();
-        let view = Matrix4::translation(Vector3::new(0.0, 0.0, -30.0));
+        let view = Matrix4::translation(Vector3::new(0.0, 0.0, -5.0));
         // let projection = Matrix4::identity();
         let projection = Matrix4::perspective(45.0, (open_gl::scr_width as f32) / (open_gl::scr_height as f32), 0.1, 100.0);
         // let projection = Matrix4::perspective(60.0, 1.0, 1.0, 100.0);
